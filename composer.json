@@ -1,35 +1,13 @@
 {
-	"name" : "zephir/luya",
-	"type" : "library",
-	"description" : "Zephir Luya Library",
-	"keywords" : ["php", "yii2"],
-	"homepage" : "https://github.com/zephir/luya",
-	"minimum-stability": "dev",
-	"authors" : [
-		{
-			"name" : "nadar",
-			"homepage" : "https://github.com/nadar",
-			"role" : "Creator"
-		}
-	],
+	"name" : "zephir/luya-module-news",
+	"description" : "Zephir Luya News",
 	"require" : {
-		"php": ">=5.4.0",
-		"yiisoft/yii2": "2.0.*@stable",
-		"twig/twig" : "1.*@stable"
-	},
-	"require-dev" : {
-		"yiisoft/yii2-debug" : "*@stable",
-		"phpunit/phpunit" : "@stable",
-		"fabpot/php-cs-fixer" : "@stable"
+		"zephir/luya" : "*@dev",
+		"zephir/luya-module-news" : "*@dev"
 	},
 	"autoload" : {
 		"psr-4" : {
-			"luya\\" : "src/"
+			"news\\" : ""
 		}
-	},
-	"extra": {
-    	"asset-installer-paths": {
-            "bower-asset-library": "vendor/bower"
-        }
-    }
+	}
 }
