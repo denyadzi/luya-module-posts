@@ -26,7 +26,7 @@ After installation via Composer include the module to your configuration file wi
 ```php
 'modules' => [
     // ...
-    'newsfrontend' => 'luya\news\frontend\Module',
+    'news' => 'luya\news\frontend\Module',
     'newsadmin' => 'luya\news\admin\Module',
 ]
 ```
@@ -53,7 +53,7 @@ After adding the persmissions to your group you will be able to edit and add new
 
 As the module will try to render a view for the news overview, here is what this could look like this in a very basic way:
 
-#### views/newsfrontend/default/index.php
+#### views/news/default/index.php
 
 ```php
 <?php
@@ -76,7 +76,7 @@ use yii\widgets\LinkPager;
 <?= LinkPager::widget(['pagination' => $provider->pagination]); ?>
 ```
 
-#### views/newsfrontend/default/detail.php
+#### views/news/default/detail.php
 
 ```php
 <?php
