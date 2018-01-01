@@ -116,8 +116,8 @@ class Article extends NgRestModel
     {
         return [
             'title' => 'text',
-            'teaser_text' => 'textarea',
-            'text' => 'textarea',
+            'teaser_text' => ['textarea', 'markdown' => true],
+            'text' => ['textarea', 'markdown' => true],
             'image_id' => 'image',
             'timestamp_create' => 'datetime',
             'timestamp_display_from' => 'date',
@@ -138,6 +138,16 @@ class Article extends NgRestModel
         return Url::toRoute(['/news/default/detail', 'id' => $this->id, 'title' => Inflector::slug($this->title)]);
     }
 
+    /**
+     * Get image object.
+     * 
+     * @return \luya\admin\image\Item|boolean
+     */
+    public function getImage()
+    {
+    	return Yii::$app->storage->getImage($this->image_id);
+    }
+    
     /**
      * @inheritdoc
      */
