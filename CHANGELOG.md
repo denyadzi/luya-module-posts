@@ -5,3 +5,7 @@ All notable changes to this project will be documented in this file. This projec
 ## 1.0.1 (in progress)
 
 + [#3](https://github.com/luyadev/luya-module-news/issues/3) Added frontend views.
+
+## 1.0.0 (12. December 2017)
+
++ First stable release.
