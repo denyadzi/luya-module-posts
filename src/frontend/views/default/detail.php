@@ -18,4 +18,4 @@ use luya\admin\filters\MediumCrop;
 		<?php endforeach;?>
 	</div>
 <?php endif; ?>
-<p style="margin-top:15px;"><small><i><?= strftime('%A, %e. %B %Y', $model->timestamp_create); ?></i></small>>
+<p style="margin-top:15px;"><small><i><?= strftime('%A, %e. %B %Y', $model->timestamp_create); ?></i></small>
