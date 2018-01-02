@@ -2,6 +2,7 @@
 
 namespace luya\news\frontend\controllers;
 
+use Yii;
 use luya\news\models\Article;
 use luya\news\models\Cat;
 use yii\data\ActiveDataProvider;
@@ -35,6 +36,8 @@ class DefaultController extends \luya\web\Controller
                 'defaultOrder' => $this->module->articleDefaultOrder,
             ],
             'pagination' => [
+                'route' => $this->module->id,
+                'params' => ['page' => Yii::$app->request->get('page')],
                 'defaultPageSize' => $this->module->articleDefaultPageSize,
             ],
         ]);
@@ -65,6 +68,8 @@ class DefaultController extends \luya\web\Controller
                 'defaultOrder' => $this->module->articleDefaultOrder,
             ],
             'pagination' => [
+                'route' => $this->module->id,
+                'params' => ['page' => Yii::$app->request->get('page')],
                 'defaultPageSize' => $this->module->articleDefaultPageSize,
             ],
         ]);
@@ -118,6 +123,8 @@ class DefaultController extends \luya\web\Controller
                 'defaultOrder' => $this->module->categoryArticleDefaultOrder,
             ],
             'pagination' => [
+                'route' => $this->module->id,
+                'params' => ['page' => Yii::$app->request->get('page')],
                 'defaultPageSize' => $this->module->categoryArticleDefaultPageSize,
             ],
         ]);
