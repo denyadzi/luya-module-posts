@@ -1,0 +1,5 @@
+/vendor
+/luya
+/.settings/
+/.buildpath
+/phpunit.xml

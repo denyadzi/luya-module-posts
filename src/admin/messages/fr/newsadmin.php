@@ -17,13 +17,14 @@ return [
     'article_image_list' => 'Liste des images',
     'article_file_list' => 'Liste des fichiers',
     'article_tag' => 'Etiquette',
-    //cat
     'cat' => 'Catégories',
     'cat_title' => 'Catégorie',
     'cat_delete_error' => 'Cette catégorie est en cours d\'utilisation par un ou plusieurs actualités et ne peut être supprimé',
     'cat_title_create_error' => 'Choisir le titre de la catégorie',
-    //tag
     'tag' => 'Etiquettes',
     'tag_title' => 'Etiquette',
     'tag_title_create_error' => 'Choisir le titre de l\'étiquette',
+		
+	// 1.0.0
+	'teaser_text' => 'Teaser Text',
 ];

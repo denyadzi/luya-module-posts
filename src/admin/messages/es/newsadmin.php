@@ -1,13 +1,8 @@
 <?php
 
 return [
-
-// added translation in 1.0.0-beta5:
-
-    'news' => 'Noticias',
+	'news' => 'Noticias',
     'news_administrate' => 'Administrar',
-    
-    //article
     'article' => 'Entrada de noticias',
     'article_cat_id' => 'Categoría',
     'article_title' => 'Título',
@@ -20,15 +15,14 @@ return [
     'article_image_list' => 'Lista de imágenes',
     'article_file_list' => 'Lista de archivos',
     'article_tag' => 'Etiqueta',
-    
-    //cat
     'cat' => 'Categorías',
     'cat_title' => 'Categoría',
     'cat_delete_error' => 'Esta categoría todavía está siendo utilizada por una o varias noticias y no se puede eliminar.',
     'cat_title_create_error' => 'Elija un título de categoría.',
-    
-    //tag
     'tag' => 'Etiquetas',
     'tag_title' => 'Etiqueta',
     'tag_title_create_error' => 'Elija un título de etiqueta.',
+		
+	// 1.0.0
+	'teaser_text' => 'Teaser Text',
 ];
