@@ -13,7 +13,6 @@ final class Module extends \luya\admin\base\Module
 {
     public $apis = [
         'api-news-article' => 'luya\news\admin\apis\ArticleController',
-        'api-news-tag' => 'luya\news\admin\apis\TagController',
         'api-news-cat' => 'luya\news\admin\apis\CatController',
     ];
 
