@@ -99,6 +99,7 @@ class Article extends NgRestModel
             'title' => Module::t('article_title'),
             'text' => Module::t('article_text'),
             'teaser_text' => Module::t('teaser_text'),
+            'cat_id' => Module::t('article_cat_id'),
             'image_id' => Module::t('article_image_id'),
             'timestamp_create' => Module::t('article_timestamp_create'),
             'timestamp_display_from' => Module::t('article_timestamp_display_from'),
