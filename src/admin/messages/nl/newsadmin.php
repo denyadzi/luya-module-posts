@@ -15,7 +15,7 @@ return [
     'article_image_list' => 'Afbeeldingenlijst',
     'article_file_list' => 'Bestandslijst',
     'article_tag' => 'Tag',
-    'kat' => 'Categorieën',
+    'cat' => 'Categorieën',
     'cat_title' => 'Categorie',
     'cat_delete_error' => 'Deze categorie wordt gebruikt door één of meerdere nieuwsberichten en kan niet worden verwijderd.',
     'cat_title_create_error' => 'Voeg een categorietitel toe.',
