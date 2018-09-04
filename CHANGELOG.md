@@ -2,7 +2,11 @@
 
 All notable changes to this project will be documented in this file. This project make usage of the [Yii Versioning Strategy](https://github.com/yiisoft/yii2/blob/master/docs/internals/versions.md).
 
-## 1.0.3 (in progress)
+## 1.0.3 (4. September 2018)
+
++ Added dutch langauge
++ Added turkish language
++ Added missing label in Article model
 
 ## 1.0.2 (2. January 2018)
 
