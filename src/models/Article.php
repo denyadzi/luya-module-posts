@@ -3,9 +3,11 @@
 namespace luya\news\models;
 
 use Yii;
+use yii\base\InvalidConfigException;
 use yii\helpers\Inflector;
 use luya\helpers\Url;
 use luya\news\admin\Module;
+use luya\admin\helpers\I18n;
 use luya\admin\aws\TagActiveWindow;
 use luya\admin\ngrest\base\NgRestModel;
 use luya\admin\traits\SoftDeleteTrait;
@@ -39,6 +41,8 @@ class Article extends NgRestModel
     
     public $i18n = ['title', 'text', 'teaser_text', 'image_list'];
 
+    private $_autopost;
+
     /**
      * @inheritdoc
      */
@@ -55,6 +59,7 @@ class Article extends NgRestModel
         parent::init();
         $this->on(self::EVENT_BEFORE_INSERT, [$this, 'eventBeforeInsert']);
         $this->on(self::EVENT_BEFORE_UPDATE, [$this, 'eventBeforeUpdate']);
+        $this->on(self::EVENT_AFTER_INSERT, [$this, 'eventAfterInsert']);
     }
 
     public function eventBeforeUpdate()
@@ -63,7 +68,7 @@ class Article extends NgRestModel
         $this->timestamp_update = time();
     }
     
-    public function eventBeforeInsert()
+    public function eventBeforeInsert($event)
     {
         $this->create_user_id = Yii::$app->adminuser->getId();
         $this->update_user_id = Yii::$app->adminuser->getId();
@@ -73,6 +78,39 @@ class Article extends NgRestModel
         }
         if (empty($this->timestamp_display_from)) {
             $this->timestamp_display_from = time();
+        }
+        if ($this->_autopost) {
+            $autopostConfig = Yii::$app->controller->module->autopost;
+            if (! is_array($autopostConfig)) {
+                throw new InvalidConfigException();
+            }
+            foreach ($autopostConfig as $jobConfig) {
+                $job = Yii::createObject($jobConfig);
+                $message = I18n::decodeFindActive($this->teaser_text, '', $job->langShortCode);
+                if (empty($message)) {
+                    $event->isValid = false;
+                    $this->addError('autopost', Module::t('article_autopost_create_error'));
+                }
+            }
+        }
+    }
+
+    public function eventAfterInsert()
+    {
+        if ($this->_autopost) {
+            $autopostConfig = Yii::$app->controller->module->autopost;
+            if (! is_array($autopostConfig)) {
+                throw new InvalidConfigException();
+            }
+            foreach ($autopostConfig as $jobConfig) {
+                $job = Yii::createObject($jobConfig);
+                if (! is_a($job, 'yii\queue\JobInterface')) {
+                    throw new InvalidConfigException();
+                }
+                $job->message = I18n::decodeFindActive($this->teaser_text, '', $job->langShortCode);
+                $job->link = $this->getDetailAbsoluteUrl();
+                Yii::$app->adminqueue->push($job);
+            }
         }
     }
 
@@ -107,6 +145,7 @@ class Article extends NgRestModel
             'is_display_limit' => Module::t('article_is_display_limit'),
             'image_list' => Module::t('article_image_list'),
             'file_list' => Module::t('article_file_list'),
+            'autopost' => Module::t('article_autopost'),
         ];
     }
     
@@ -129,6 +168,21 @@ class Article extends NgRestModel
             'cat_id' => ['selectModel', 'modelClass' => Cat::className(), 'valueField' => 'id', 'labelField' => 'title']
         ];
     }
+    
+    /**
+     * @inheritdoc
+     */
+    public function ngRestExtraAttributeTypes()
+    {
+        return [
+            'autopost' => 'toggleStatus',
+        ];
+    }
+
+    public function setAutopost($autopost)
+    {
+        $this->_autopost = $autopost;
+    }
 
     /**
      *
@@ -138,6 +192,15 @@ class Article extends NgRestModel
     {
         return Url::toRoute(['/news/default/detail', 'id' => $this->id, 'title' => Inflector::slug($this->title)]);
     }
+
+    /**
+     * @return string 
+     */
+    public function getDetailAbsoluteUrl()
+    {
+        return Url::toRoute(['/news/default/detail', 'id' => $this->id, 'title' => Inflector::slug($this->title)], true);
+    }
+
 
     /**
      * Get image object.
@@ -175,9 +238,20 @@ class Article extends NgRestModel
     {
         return [
             [['list'], ['cat_id', 'title', 'timestamp_create', 'image_id']],
-            [['create', 'update'], ['cat_id', 'title', 'teaser_text', 'text', 'timestamp_create', 'timestamp_display_from', 'is_display_limit', 'timestamp_display_until', 'image_id', 'image_list', 'file_list']],
+            [['create'], ['cat_id', 'title', 'teaser_text', 'autopost', 'text', 'timestamp_create', 'timestamp_display_from', 'is_display_limit', 'timestamp_display_until', 'image_id', 'image_list', 'file_list']],
+            [['update'], ['cat_id', 'title', 'teaser_text', 'text', 'timestamp_create', 'timestamp_display_from', 'is_display_limit', 'timestamp_display_until', 'image_id', 'image_list', 'file_list']],
             [['delete'], true],
         ];
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function scenarios()
+    {
+        $scene = parent::scenarios();
+        $scene['restcreate'][] = 'autopost';
+        return $scene;
     }
     
     /**
@@ -236,5 +310,10 @@ class Article extends NgRestModel
     public function getCategoryName()
     {
         return $this->cat->title;
+    }
+
+    public function extraFields()
+    {
+        return ['autopost'];
     }
 }

@@ -11,6 +11,8 @@ use luya\admin\components\AdminMenuBuilder;
  */
 final class Module extends \luya\admin\base\Module
 {
+    public $autopost = [];
+    
     public $apis = [
         'api-news-article' => 'luya\news\admin\apis\ArticleController',
         'api-news-cat' => 'luya\news\admin\apis\CatController',
