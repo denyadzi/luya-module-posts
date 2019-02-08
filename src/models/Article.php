@@ -3,15 +3,13 @@
 namespace luya\news\models;
 
 use Yii;
-use yii\base\InvalidConfigException;
 use yii\helpers\Inflector;
 use luya\helpers\Url;
 use luya\news\admin\Module;
-use luya\admin\helpers\I18n;
-use luya\admin\aws\TagActiveWindow;
+use luya\admin\aws\TaggableActiveWindow;
 use luya\admin\ngrest\base\NgRestModel;
 use luya\admin\traits\SoftDeleteTrait;
-use luya\admin\traits\TagsTrait;
+use luya\admin\traits\TaggableTrait;
 
 /**
  * This is the model class for table "news_article".
@@ -37,7 +35,7 @@ use luya\admin\traits\TagsTrait;
  */
 class Article extends NgRestModel
 {
-    use SoftDeleteTrait, TagsTrait;
+    use SoftDeleteTrait, TaggableTrait;
     
     public $i18n = ['title', 'text', 'teaser_text', 'image_list'];
 
@@ -79,38 +77,12 @@ class Article extends NgRestModel
         if (empty($this->timestamp_display_from)) {
             $this->timestamp_display_from = time();
         }
-        if ($this->_autopost) {
-            $autopostConfig = Yii::$app->controller->module->autopost;
-            if (! is_array($autopostConfig)) {
-                throw new InvalidConfigException();
-            }
-            foreach ($autopostConfig as $jobConfig) {
-                $job = Yii::createObject($jobConfig);
-                $message = I18n::decodeFindActive($this->teaser_text, '', $job->langShortCode);
-                if (empty($message)) {
-                    $event->isValid = false;
-                    $this->addError('autopost', Module::t('article_autopost_create_error'));
-                }
-            }
-        }
     }
 
     public function eventAfterInsert()
     {
         if ($this->_autopost) {
-            $autopostConfig = Yii::$app->controller->module->autopost;
-            if (! is_array($autopostConfig)) {
-                throw new InvalidConfigException();
-            }
-            foreach ($autopostConfig as $jobConfig) {
-                $job = Yii::createObject($jobConfig);
-                if (! is_a($job, 'yii\queue\JobInterface')) {
-                    throw new InvalidConfigException();
-                }
-                $job->message = I18n::decodeFindActive($this->teaser_text, '', $job->langShortCode);
-                $job->link = $this->getDetailAbsoluteUrl();
-                Yii::$app->adminqueue->push($job);
-            }
+            Yii::$app->newsautopost->queuePostJobs($this);
         }
     }
 
@@ -260,7 +232,7 @@ class Article extends NgRestModel
     public function ngRestActiveWindows()
     {
         return [
-            ['class' => TagActiveWindow::class],
+            ['class' => TaggableActiveWindow::class],
         ];
     }
 

@@ -30,5 +30,4 @@ return [
     
     'teaser_text' => 'Teaser Text',
     'article_autopost' => 'Autopost',
-    'article_autopost_create_error' => 'Cannot auto post empty message. Please verify that the configured translation field is not empty',
 ];

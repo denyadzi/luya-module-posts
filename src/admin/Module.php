@@ -11,11 +11,10 @@ use luya\admin\components\AdminMenuBuilder;
  */
 final class Module extends \luya\admin\base\Module
 {
-    public $autopost = [];
-    
     public $apis = [
         'api-news-article' => 'luya\news\admin\apis\ArticleController',
         'api-news-cat' => 'luya\news\admin\apis\CatController',
+        'api-news-autopostconfig' => 'luya\news\admin\apis\AutopostConfigController',
     ];
 
     /**
@@ -27,7 +26,19 @@ final class Module extends \luya\admin\base\Module
             ->node('news', 'local_library')
                 ->group('news_administrate')
                     ->itemApi('article', 'newsadmin/article/index', 'edit', 'api-news-article')
-                    ->itemApi('cat', 'newsadmin/cat/index', 'bookmark_border', 'api-news-cat');
+                    ->itemApi('cat', 'newsadmin/cat/index', 'bookmark_border', 'api-news-cat')
+                    ->itemApi('autopost_config', 'newsadmin/autopost-config/index', 'tune', 'api-news-autopostconfig');
+    }
+    /**
+     * @inheritdoc
+     */
+    public function registerComponents()
+    {
+        return [
+            'newsautopost' => [
+                'class' => 'luya\news\admin\components\Autopost',
+            ],
+        ];
     }
 
     public static function onLoad()

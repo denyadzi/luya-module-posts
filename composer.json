@@ -15,7 +15,8 @@
 	"support" : {
 		"issues" : "https://github.com/luyadev/luya/issues"
 	},
-	"require-dev" : {
+        "require-dev" : {
+                "luyadev/luya-module-admin": "dev-master",
 		"luyadev/luya-testsuite" : "~1.0.0"
 	},
 	"autoload" : {
@@ -25,7 +26,7 @@
 	},
 	"autoload-dev" : {
        "psr-4" : {
-       		"luya\\news\\tests\\" : "tests/",
+       		"luya\\news\\tests\\" : "tests/news",
            "newstests\\" : "tests/"
        }
     },

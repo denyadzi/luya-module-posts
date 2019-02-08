@@ -29,4 +29,5 @@ return [
 // 1.0.0
     
     'teaser_text' => 'Teaser Text',
+    'article_autopost' => 'Autopost',
 ];
