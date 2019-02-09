@@ -30,7 +30,10 @@ class FacebookAutopost extends BaseObject implements RetryableJob
     public $configId;
 
     /** @var bool */
-    public $postLink = false;
+    public $postLink = true;
+
+    /** @var bool */
+    public $postMessage = false;
 
     public function init()
     {
@@ -81,9 +84,10 @@ class FacebookAutopost extends BaseObject implements RetryableJob
 
     private function getFieldsData()
     {
-        $fields = [
-            'message' => $this->message,
-        ];
+        $fields = ['message' => ''];
+        if ($this->postMessage) {
+            $fields['message'] = $this->message;
+        }
         if ($this->postLink && $this->link) {
             $fields['link'] = $this->link;
         }

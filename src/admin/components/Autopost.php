@@ -49,6 +49,7 @@ class Autopost extends \yii\base\BaseObject
                 'message' => $message,
                 'link' => $article->getDetailAbsoluteUrl(),
                 'postLink' => (bool)$config->with_link,
+                'postMessage' => (bool)$config->with_message,
             ]);
         default:
             throw new InvalidArgumentException();

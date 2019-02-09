@@ -93,4 +93,21 @@ class AutopostTest extends \newstests\BaseWebTestCase
 
         $job = $this->invokeMethod($this->app->newsautopost, 'createJob', [$article, $config]);
     }
+    
+    public function testCreateJob_withMessageFlag()
+    {
+        $article = $this->articleFixture->getModel('model1');
+        $config  = new AutopostConfig([
+            'id' => 2,
+            'type' => AutopostModel::TYPE_FACEBOOK,
+            'access_token' => '1234',
+            'with_link' => 0,
+            'with_message' => 1,
+            'lang_id' => 1,
+        ]);
+
+        $job = $this->invokeMethod($this->app->newsautopost, 'createJob', [$article, $config]);
+
+        $this->assertTrue($job->postMessage);
+    }
 }

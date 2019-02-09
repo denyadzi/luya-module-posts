@@ -2,6 +2,7 @@
 
 namespace luya\news\models;
 
+use Yii;
 use luya\admin\ngrest\base\NgRestModel;
 use luya\admin\models\Lang;
 use luya\news\models\Autopost;
@@ -17,6 +18,7 @@ use luya\news\admin\Module;
  * @property text $access_token
  * @property int $lang_id
  * @property tinyint $with_link
+ * @property tinyint $with_message
  */
 class AutopostConfig extends NgRestModel
 {
@@ -47,6 +49,7 @@ class AutopostConfig extends NgRestModel
             'access_token' => Module::t('autopost_config_access_token'),
             'lang_id' => Module::t('autopost_config_lang_id'),
             'with_link' => Module::t('autopost_config_with_link'),
+            'with_message' => Module::t('autopost_config_with_message'),
         ];
     }
 
@@ -56,10 +59,11 @@ class AutopostConfig extends NgRestModel
     public function rules()
     {
         return [
-            [['access_token', 'lang_id'], 'required'],
+            [['access_token', 'lang_id', 'type'], 'required'],
             [['access_token'], 'string'],
             [['type'], 'string', 'max' => 32],
-            [['with_link'], 'integer'],
+            [['with_link', 'with_message'], 'integer'],
+            [['with_message'], 'required', 'isEmpty' => function($v) { return empty($v); }, 'when' => function($model){ return empty($model->with_link); }, 'message' => Module::t('autopost_config_error_empty_link_and_message')],
             [['lang_id'], 'exist', 'skipOnError' => true, 'targetClass' => Lang::className(), 'targetAttribute' => ['lang_id' => 'id']],
         ];
     }
@@ -87,6 +91,10 @@ class AutopostConfig extends NgRestModel
                 'toggleStatus',
                 'initValue' => 0, // front bug
             ],
+            'with_message' => [
+                'toggleStatus',
+                'initValue' => 0, // front bug
+            ],
         ];
     }
 
@@ -104,8 +112,8 @@ class AutopostConfig extends NgRestModel
     public function ngRestScopes()
     {
         return [
-            ['list', ['type', 'lang_id', 'with_link']],
-            [['create', 'update'], ['type', 'access_token', 'lang_id', 'with_link']],
+            ['list', ['type', 'lang_id', 'with_link', 'with_message']],
+            [['create', 'update'], ['type', 'access_token', 'lang_id', 'with_link', 'with_message']],
             ['delete', false],
         ];
     }

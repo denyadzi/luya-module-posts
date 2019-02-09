@@ -18,6 +18,7 @@ class m190208_083039_autopost_config_model extends Migration
             'access_token' => $this->text()->notNull(),
             'lang_id' => $this->integer(11)->notNull(),
             'with_link' => $this->boolean()->notNull()->defaultValue(false),
+            'with_message' => $this->boolean()->notNull()->defaultValue(false),
         ]);
         $this->addColumn('news_autopost', 'config_id', $this->integer(11)->notNull());
         $this->addForeignKey('fk_autopost_config_lang',
