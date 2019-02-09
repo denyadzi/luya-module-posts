@@ -13,7 +13,7 @@ class FacebookAutopostTest extends \newstests\BaseWebTestCase
         $config = $this->autopostConfigFixture->getModel('model1');
         $job = $this->getMockBuilder(FacebookAutopost::className())
              ->setMethods(['createPost'])
-             ->setConstructorArgs([ ['accessToken' => 'token', 'message' => 'Message', 'articleId' => $article->id, 'configId' => $config->id] ])
+             ->setConstructorArgs([ ['accessToken' => 'token', 'message' => 'Message', 'articleId' => $article->id, 'configId' => $config->id ] ])
              ->getMock();
         $job->method('createPost')
             ->willReturn([

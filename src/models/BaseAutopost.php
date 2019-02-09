@@ -2,7 +2,8 @@
 
 namespace luya\news\models;
 
-use yii\helpers\Json;
+use yii\helpers\{Json,ArrayHelper};
+use luya\admin\traits\SoftDeleteTrait;
 use luya\news\admin\Module;
 use luya\news\models\Article;
 use luya\news\models\AutopostConfig;
@@ -11,6 +12,7 @@ use luya\news\models\AutopostConfig;
  * This is the model class for table "news_autopost".
  *
  * @property int $id
+ * @property boolean $is_deleted
  * @property int $article_id
  * @property string $type
  * @property string $post_data
@@ -21,6 +23,8 @@ use luya\news\models\AutopostConfig;
  */
 abstract class BaseAutopost extends \yii\db\ActiveRecord
 {
+    use SoftDeleteTrait;
+    
     /**
      * {@inheritdoc}
      */
@@ -77,13 +81,13 @@ abstract class BaseAutopost extends \yii\db\ActiveRecord
      */
     public function behaviors()
     {
-        return [
+        return ArrayHelper::merge(parent::behaviors(), [
             [
-                'class' => \yii\behaviors\TimestampBehavior::className(),
+                'class' => '\yii\behaviors\TimestampBehavior',
                 'createdAtAttribute' => 'timestamp_create',
                 'updatedAtAttribute' => 'timestamp_update',
             ],
-        ];
+        ]);
     }
 
     /**
@@ -94,6 +98,8 @@ abstract class BaseAutopost extends \yii\db\ActiveRecord
         return [
             [['type', 'article_id'], 'required'],
             [['article_id', 'timestamp_create', 'timestamp_update'], 'integer'],
+            [['is_deleted'], 'boolean'],
+            [['is_deleted'], 'default', 'value' => false],
             [['type'], 'string', 'max' => 32],
             [['post_data'], 'string'],
             [['article_id'], 'exist', 'skipOnError' => true, 'targetClass' => Article::className(), 'targetAttribute' => ['article_id' => 'id']],

@@ -52,6 +52,7 @@ class BaseWebTestCase extends \luya\testsuite\cases\WebApplicationTestCase
             'fixtureData' => [
                 'model1' => [
                     'id' => 1,
+                    'is_deleted' => 0,
                     'type' => 'facebook',
                     'article_id' => 1,
                     'post_data' => '{"id": "123"}',
@@ -111,6 +112,7 @@ class BaseWebTestCase extends \luya\testsuite\cases\WebApplicationTestCase
             'fixtureData' => [
                 'model1' => [
                     'id' => 1,
+                    'is_deleted' => 0,
                     'type' => 'facebook',
                     'lang_id' => 1,
                     'access_token' => '1234',

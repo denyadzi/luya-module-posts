@@ -14,11 +14,12 @@ class m190206_162042_auto_post_model extends Migration
     {
         $this->createTable('news_autopost', [
             'id' => $this->primaryKey(),
-            'article_id' => $this->integer(11),
+            'is_deleted' => $this->boolean()->notNull()->defaultValue(false),
             'type' => $this->string(32)->notNull(),
             'post_data' => $this->text(),
-            'timestamp_create' => $this->integer(11)->defaultValue(0),
-            'timestamp_update' => $this->integer(11)->defaultValue(0),
+            'timestamp_create' => $this->integer(11),
+            'timestamp_update' => $this->integer(11),
+            'article_id' => $this->integer(11)->notNull(),
         ]);
         $this->addForeignKey('fk_article_id',
                              'news_autopost',

@@ -3,7 +3,9 @@
 namespace luya\news\models;
 
 use Yii;
+use yii\helpers\ArrayHelper;
 use luya\admin\ngrest\base\NgRestModel;
+use luya\admin\traits\SoftDeleteTrait;
 use luya\admin\models\Lang;
 use luya\news\models\Autopost;
 use luya\news\admin\Module;
@@ -14,6 +16,7 @@ use luya\news\admin\Module;
  * File has been created with `crud/create` command. 
  *
  * @property integer $id
+ * @property boolean $is_deleted
  * @property string $type
  * @property text $access_token
  * @property int $lang_id
@@ -22,6 +25,8 @@ use luya\news\admin\Module;
  */
 class AutopostConfig extends NgRestModel
 {
+    use SoftDeleteTrait;
+    
     /**
      * @inheritdoc
      */
@@ -38,6 +43,20 @@ class AutopostConfig extends NgRestModel
         return 'api-news-autopostconfig';
     }
 
+    /**
+     * @inheritdoc
+     */
+    public function behaviors()
+    {
+        return ArrayHelper::merge(parent::behaviors(), [
+            [
+                'class' => '\yii\behaviors\TimestampBehavior',
+                'createdAtAttribute' => 'timestamp_create',
+                'updatedAtAttribute' => 'timestamp_update',
+            ],
+        ]);
+    }
+    
     /**
      * @inheritdoc
      */
@@ -62,7 +81,8 @@ class AutopostConfig extends NgRestModel
             [['access_token', 'lang_id', 'type'], 'required'],
             [['access_token'], 'string'],
             [['type'], 'string', 'max' => 32],
-            [['with_link', 'with_message'], 'integer'],
+            [['with_link', 'with_message', 'is_deleted'], 'boolean'],
+            [['with_link', 'with_message', 'is_deleted'], 'default', 'value' => false],
             [['with_message'], 'required', 'isEmpty' => function($v) { return empty($v); }, 'when' => function($model){ return empty($model->with_link); }, 'message' => Module::t('autopost_config_error_empty_link_and_message')],
             [['lang_id'], 'exist', 'skipOnError' => true, 'targetClass' => Lang::className(), 'targetAttribute' => ['lang_id' => 'id']],
         ];
@@ -114,7 +134,7 @@ class AutopostConfig extends NgRestModel
         return [
             ['list', ['type', 'lang_id', 'with_link', 'with_message']],
             [['create', 'update'], ['type', 'access_token', 'lang_id', 'with_link', 'with_message']],
-            ['delete', false],
+            ['delete', true],
         ];
     }
 }
