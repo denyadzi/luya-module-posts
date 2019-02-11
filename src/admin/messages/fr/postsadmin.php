@@ -2,8 +2,8 @@
 
 return [
     /* Added translation in 1.0.0-beta5 */
-    'news' => 'Actualités',
-    'news_administrate' => 'Administrer',
+    'posts' => 'Actualités',
+    'posts_administrate' => 'Administrer',
     //article
     'article' => 'Entrée des actualités',
     'article_cat_id' => 'Catégorie',

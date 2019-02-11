@@ -1,23 +1,23 @@
 <?php
 
-namespace luya\news\tests;
+namespace luya\posts\tests;
 
 use Yii;
 use luya\testsuite\cases\WebApplicationTestCase;
 use luya\testsuite\traits\MessageFileCompareTrait;
 use luya\testsuite\traits\MigrationFileCheckTrait;
 
-class NewsTest extends WebApplicationTestCase
+class PostsTest extends WebApplicationTestCase
 {
 	use MessageFileCompareTrait, MigrationFileCheckTrait;
 	
 	public function getConfigArray()
 	{
 		return [
-			'id' => 'newstest',
+			'id' => 'poststest',
 			'basePath' => dirname(__DIR__),
 			'modules' => [
-				'newsadmin' => 'luya\news\admin\Module',
+				'postsadmin' => 'luya\posts\admin\Module',
 			],
 			'components' => [
 				'db' => [
@@ -30,14 +30,14 @@ class NewsTest extends WebApplicationTestCase
 	
 	public function testMessageFiles()
 	{
-		$this->compareMessages(Yii::getAlias('@newsadmin/messages'), 'en');
+		$this->compareMessages(Yii::getAlias('@postsadmin/messages'), 'en');
 	}
 
 	/*
 	public function testMigrationFiles()
 	{
 		// missing mysqli config
-		$this->checkMigrationFolder('@newsadmin/migrations');
+		$this->checkMigrationFolder('@postsadmin/migrations');
 	}
 	*/
 }

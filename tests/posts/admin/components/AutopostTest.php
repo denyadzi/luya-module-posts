@@ -1,14 +1,14 @@
 <?php
 
-namespace luya\news\tests\admin\components;
+namespace luya\posts\tests\admin\components;
 
 use luya\admin\components\AdminLanguage;
-use luya\news\admin\components\Autopost;
-use luya\news\admin\jobs\FacebookAutopost;
-use luya\news\models\AutopostConfig;
-use luya\news\models\Autopost as AutopostModel;
+use luya\posts\admin\components\Autopost;
+use luya\posts\admin\jobs\FacebookAutopost;
+use luya\posts\models\AutopostConfig;
+use luya\posts\models\Autopost as AutopostModel;
 
-class AutopostTest extends \newstests\BaseWebTestCase
+class AutopostTest extends \poststests\BaseWebTestCase
 {
     public function testQueuePostJobs_articleHasConfigLanguageTeaserText_isQueued()
     {
@@ -70,10 +70,10 @@ class AutopostTest extends \newstests\BaseWebTestCase
             'lang_id' => 1,
         ]);
 
-        $job = $this->invokeMethod($this->app->newsautopost, 'createJob', [$article, $config]);
+        $job = $this->invokeMethod($this->app->postsautopost, 'createJob', [$article, $config]);
 
         $this->assertSame('Teaser 1', $job->message);
-        $this->assertSame('http://localhost/news/default/detail?id=1&title=title-1', $job->link);
+        $this->assertSame('http://localhost/posts/default/detail?id=1&title=title-1', $job->link);
         $this->assertSame('1234', $job->accessToken);
         $this->assertEquals(1, $job->articleId);
         $this->assertEquals(2, $job->configId);
@@ -81,7 +81,7 @@ class AutopostTest extends \newstests\BaseWebTestCase
     }
 
     /**
-     * @expectedException \luya\news\admin\exceptions\NoAutopostMessageException
+     * @expectedException \luya\posts\admin\exceptions\NoAutopostMessageException
      */
     public function testCreateJob_noMessage()
     {
@@ -91,7 +91,7 @@ class AutopostTest extends \newstests\BaseWebTestCase
             'lang_id' => 2, // no "de" translation
         ]);
 
-        $job = $this->invokeMethod($this->app->newsautopost, 'createJob', [$article, $config]);
+        $job = $this->invokeMethod($this->app->postsautopost, 'createJob', [$article, $config]);
     }
     
     public function testCreateJob_withMessageFlag()
@@ -106,7 +106,7 @@ class AutopostTest extends \newstests\BaseWebTestCase
             'lang_id' => 1,
         ]);
 
-        $job = $this->invokeMethod($this->app->newsautopost, 'createJob', [$article, $config]);
+        $job = $this->invokeMethod($this->app->postsautopost, 'createJob', [$article, $config]);
 
         $this->assertTrue($job->postMessage);
     }

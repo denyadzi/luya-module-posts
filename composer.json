@@ -1,38 +1,49 @@
 {
-	"name" : "luyadev/luya-module-news",
-	"description" : "The news module will provided you a basic news system with categories and tags.",
-	"type" : "luya-module",
-	"keywords" : ["php", "luya", "module", "news", "yii2", "yii", "luya-module"],
-	"license": "MIT",
-	"homepage" : "http://luya.io",
-	"authors" : [
-		{
-			"name" : "Basil",
-			"email" : "git@nadar.io",
-			"homepage" : "https://github.com/nadar"
-		}
-	],
-	"support" : {
-		"issues" : "https://github.com/luyadev/luya/issues"
-	},
-        "require-dev" : {
-                "luyadev/luya-module-admin": "dev-master",
-		"luyadev/luya-testsuite" : "~1.0.0"
-	},
-	"autoload" : {
-		"psr-4" : {
-			"luya\\news\\" : "src/"
-		}
-	},
-	"autoload-dev" : {
-       "psr-4" : {
-       		"luya\\news\\tests\\" : "tests/news",
-           "newstests\\" : "tests/"
-       }
+  "name" : "denyadzi/luya-module-posts",
+  "description" : "The posts module provides standard blog/news functionality, including categories, articles, tags, wysiwyg, social networks integration.",
+  "type" : "luya-module",
+  "keywords" : ["php", "luya", "module", "blog", "news", "yii2", "yii", "luya-module"],
+  "license": "MIT",
+  "homepage" : "http://github.com/denyadzi/luya-module-posts",
+  "authors" : [
+    {
+      "name" : "Basil",
+      "email" : "git@nadar.io",
+      "homepage" : "https://github.com/nadar"
     },
-	"extra": {
-        "branch-alias": {
-            "dev-master": "1.0.x-dev"
-        }
+    {
+      "name": "andrzej",
+      "email": "andrzej@liberosoft.pl"
+    },
+    {
+      "name": "Dzianis Jackievic",
+      "email": "mail@miesta.by"
     }
+  ],
+  "support" : {
+    "issues" : "https://github.com/denyadzi/luya-module-posts/issues"
+  },
+  "require": {
+    "bower-asset/angular-ui-tinymce" : "~0.0.18",
+    "luyadev/luya-module-admin": "dev-master"
+  },
+  "require-dev" : {
+    "luyadev/luya-testsuite" : "~1.0.0"
+  },
+  "autoload" : {
+    "psr-4" : {
+      "luya\\posts\\" : "src/"
+    }
+  },
+  "autoload-dev" : {
+    "psr-4" : {
+      "luya\\posts\\tests\\" : "tests/posts",
+      "poststests\\" : "tests/"
+    }
+  },
+  "extra": {
+    "branch-alias": {
+      "dev-master": "2.x-dev"
+    }
+  }
 }

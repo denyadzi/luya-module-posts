@@ -1,9 +1,9 @@
 <?php
 
-namespace luya\news\frontend;
+namespace luya\posts\frontend;
 
 /**
- * News Frontend Module.
+ * Posts Frontend Module.
  *
  * @author Basil Suter <basil@nadar.io>
  */
@@ -15,7 +15,7 @@ final class Module extends \luya\base\Module
     public $useAppViewPath = true;
 
     /**
-     * @var array The default order for the article overview in the index action for the news.
+     * @var array The default order for the article overview in the index action for the posts.
      *
      * In order to read more about activeDataProvider defaultOrder: http://www.yiiframework.com/doc-2.0/yii-data-sort.html#$defaultOrder-detail
      */
@@ -27,7 +27,7 @@ final class Module extends \luya\base\Module
     public $articleDefaultPageSize = 10;
     
     /**
-     * @var array The default order for the category article list in the category action for the news.
+     * @var array The default order for the category article list in the category action for the posts.
      *
      * In order to read more about activeDataProvider defaultOrder: http://www.yiiframework.com/doc-2.0/yii-data-sort.html#$defaultOrder-detail
      */
@@ -42,6 +42,6 @@ final class Module extends \luya\base\Module
      * @var array
      */
     public $urlRules = [
-        ['pattern' => 'news/<id:\d+>/<title:[a-zA-Z0-9\-]+>/', 'route' => 'news/default/detail'],
+        ['pattern' => 'posts/<id:\d+>/<title:[a-zA-Z0-9\-]+>/', 'route' => 'posts/default/detail'],
     ];
 }

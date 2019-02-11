@@ -1,8 +1,8 @@
 <?php
 
-namespace luya\news\admin\apis;
+namespace luya\posts\admin\apis;
 
 class ArticleController extends \luya\admin\ngrest\base\Api
 {
-    public $modelClass = 'luya\news\models\Article';
+    public $modelClass = 'luya\posts\models\Article';
 }

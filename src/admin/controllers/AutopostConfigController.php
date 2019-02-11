@@ -1,6 +1,6 @@
 <?php
 
-namespace luya\news\admin\controllers;
+namespace luya\posts\admin\controllers;
 
 /**
  * Autopost Config Controller.
@@ -12,5 +12,5 @@ class AutopostConfigController extends \luya\admin\ngrest\base\Controller
     /**
      * @var string The path to the model which is the provider for the rules and fields.
      */
-    public $modelClass = 'luya\news\models\AutopostConfig';
+    public $modelClass = 'luya\posts\models\AutopostConfig';
 }

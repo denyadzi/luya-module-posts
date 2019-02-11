@@ -1,12 +1,12 @@
 <?php
 
-namespace luya\news\models;
+namespace luya\posts\models;
 
-use luya\news\admin\Module;
+use luya\posts\admin\Module;
 use luya\admin\ngrest\base\NgRestModel;
 
 /**
- * News Category Model
+ * Posts Category Model
  *
  * @author Basil Suter <basil@nadar.io>
  */
@@ -22,7 +22,7 @@ class Cat extends NgRestModel
      */
     public static function tableName()
     {
-        return 'news_cat';
+        return 'posts_cat';
     }
     /**
      * @inheritdoc
@@ -69,7 +69,7 @@ class Cat extends NgRestModel
      */
     public static function ngRestApiEndpoint()
     {
-        return 'api-news-cat';
+        return 'api-posts-cat';
     }
 
     /**

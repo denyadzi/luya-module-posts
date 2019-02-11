@@ -1,14 +1,14 @@
 <?php
 
-namespace luya\news\models;
+namespace luya\posts\models;
 
 use Yii;
 use yii\helpers\ArrayHelper;
 use luya\admin\ngrest\base\NgRestModel;
 use luya\admin\traits\SoftDeleteTrait;
 use luya\admin\models\Lang;
-use luya\news\models\Autopost;
-use luya\news\admin\Module;
+use luya\posts\models\Autopost;
+use luya\posts\admin\Module;
 
 /**
  * Autopost Config.
@@ -32,7 +32,7 @@ class AutopostConfig extends NgRestModel
      */
     public static function tableName()
     {
-        return 'news_autopost_config';
+        return 'posts_autopost_config';
     }
 
     /**
@@ -40,7 +40,7 @@ class AutopostConfig extends NgRestModel
      */
     public static function ngRestApiEndpoint()
     {
-        return 'api-news-autopostconfig';
+        return 'api-posts-autopostconfig';
     }
 
     /**

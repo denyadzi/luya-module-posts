@@ -1,8 +1,8 @@
 <?php
 
-namespace luya\news\admin\controllers;
+namespace luya\posts\admin\controllers;
 
 class CatController extends \luya\admin\ngrest\base\Controller
 {
-    public $modelClass = '\luya\news\models\Cat';
+    public $modelClass = '\luya\posts\models\Cat';
 }

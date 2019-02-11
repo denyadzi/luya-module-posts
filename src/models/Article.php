@@ -1,18 +1,18 @@
 <?php
 
-namespace luya\news\models;
+namespace luya\posts\models;
 
 use Yii;
 use yii\helpers\Inflector;
 use luya\helpers\Url;
-use luya\news\admin\Module;
+use luya\posts\admin\Module;
 use luya\admin\aws\TaggableActiveWindow;
 use luya\admin\ngrest\base\NgRestModel;
 use luya\admin\traits\SoftDeleteTrait;
 use luya\admin\traits\TaggableTrait;
 
 /**
- * This is the model class for table "news_article".
+ * This is the model class for table "posts_article".
  *
  * @property integer $id
  * @property string $title
@@ -30,7 +30,7 @@ use luya\admin\traits\TaggableTrait;
  * @property integer $is_deleted
  * @property integer $is_display_limit
  * @property string $teaser_text
- * @property string $detailUrl Return the link to the detail url of a news item.
+ * @property string $detailUrl Return the link to the detail url of a posts item.
  * @author Basil Suter <basil@nadar.io>
  */
 class Article extends NgRestModel
@@ -46,7 +46,7 @@ class Article extends NgRestModel
      */
     public static function tableName()
     {
-        return 'news_article';
+        return 'posts_article';
     }
 
     /**
@@ -82,7 +82,7 @@ class Article extends NgRestModel
     public function eventAfterInsert()
     {
         if ($this->_autopost) {
-            Yii::$app->newsautopost->queuePostJobs($this);
+            Yii::$app->postsautopost->queuePostJobs($this);
         }
     }
 
@@ -129,7 +129,9 @@ class Article extends NgRestModel
         return [
             'title' => 'text',
             'teaser_text' => ['textarea', 'markdown' => true],
-            'text' => ['textarea', 'markdown' => true],
+            'text' => [
+                'class' => 'luya\posts\admin\plugins\WysiwygPlugin',
+            ],
             'image_id' => 'image',
             'timestamp_create' => 'datetime',
             'timestamp_display_from' => 'date',
@@ -162,7 +164,7 @@ class Article extends NgRestModel
      */
     public function getDetailUrl()
     {
-        return Url::toRoute(['/news/default/detail', 'id' => $this->id, 'title' => Inflector::slug($this->title)]);
+        return Url::toRoute(['/posts/default/detail', 'id' => $this->id, 'title' => Inflector::slug($this->title)]);
     }
 
     /**
@@ -170,7 +172,7 @@ class Article extends NgRestModel
      */
     public function getDetailAbsoluteUrl()
     {
-        return Url::toRoute(['/news/default/detail', 'id' => $this->id, 'title' => Inflector::slug($this->title)], true);
+        return Url::toRoute(['/posts/default/detail', 'id' => $this->id, 'title' => Inflector::slug($this->title)], true);
     }
 
 
@@ -189,7 +191,7 @@ class Article extends NgRestModel
      */
     public static function ngRestApiEndpoint()
     {
-        return 'api-news-article';
+        return 'api-posts-article';
     }
     
     /**
@@ -210,7 +212,7 @@ class Article extends NgRestModel
     {
         return [
             [['list'], ['cat_id', 'title', 'timestamp_create', 'image_id']],
-            [['create'], ['cat_id', 'title', 'teaser_text', 'autopost', 'text', 'timestamp_create', 'timestamp_display_from', 'is_display_limit', 'timestamp_display_until', 'image_id', 'image_list', 'file_list']],
+            [['create'], ['cat_id', 'title', 'teaser_text', /*'autopost',*/ 'text', 'timestamp_create', 'timestamp_display_from', 'is_display_limit', 'timestamp_display_until', 'image_id', 'image_list', 'file_list']],
             [['update'], ['cat_id', 'title', 'teaser_text', 'text', 'timestamp_create', 'timestamp_display_from', 'is_display_limit', 'timestamp_display_until', 'image_id', 'image_list', 'file_list']],
             [['delete'], true],
         ];
@@ -241,7 +243,7 @@ class Article extends NgRestModel
      * @param false|int $limit
      * @return Article
      */
-    public static function getAvailableNews($limit = false)
+    public static function getAvailable($limit = false)
     {
         $q = self::find()
             ->andWhere('timestamp_display_from <= :time', ['time' => time()])

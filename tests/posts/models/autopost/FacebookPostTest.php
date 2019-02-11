@@ -1,10 +1,10 @@
 <?php
 
-namespace luya\news\tests\models\autopost;
+namespace luya\posts\tests\models\autopost;
 
-use luya\news\models\Autopost;
+use luya\posts\models\Autopost;
 
-class FacebookPostTest extends \newstests\BaseWebTestCase
+class FacebookPostTest extends \poststests\BaseWebTestCase
 {
     public function testFactory()
     {

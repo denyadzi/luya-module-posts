@@ -1,14 +1,14 @@
 <?php
 
-namespace luya\news\models;
+namespace luya\posts\models;
 
 use yii\base\InvalidArgumentException;
-use luya\news\models\autopost\FacebookPost;
+use luya\posts\models\autopost\FacebookPost;
 
 /**
  * @inheritdoc
  */
-class Autopost extends \luya\news\models\BaseAutopost
+class Autopost extends \luya\posts\models\BaseAutopost
 {
     const TYPE_FACEBOOK = 'facebook';
 

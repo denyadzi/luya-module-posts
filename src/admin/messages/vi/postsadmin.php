@@ -4,8 +4,8 @@ return [
 
 // added translation in 1.0.0-beta5:
 
-    'news' => 'Bài viết',
-    'news_administrate' => 'Quản lý bài viết',
+    'posts' => 'Bài viết',
+    'posts_administrate' => 'Quản lý bài viết',
     'article' => 'Bài viết mới',
     'article_cat_id' => 'Danh mục',
     'article_title' => 'Tiêu đề',

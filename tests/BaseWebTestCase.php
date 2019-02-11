@@ -1,10 +1,10 @@
 <?php
 
-namespace newstests;
+namespace poststests;
 
 use luya\testsuite\fixtures\ActiveRecordFixture;
 use luya\admin\models\Lang;
-use luya\news\models\{Autopost,Article,Cat,AutopostConfig};
+use luya\posts\models\{Autopost,Article,Cat,AutopostConfig};
 
 class BaseWebTestCase extends \luya\testsuite\cases\WebApplicationTestCase
 {
@@ -22,7 +22,7 @@ class BaseWebTestCase extends \luya\testsuite\cases\WebApplicationTestCase
     public function getConfigArray()
     {
         return [
-            'id' => 'newstests',
+            'id' => 'poststests',
             'basePath' => dirname(__DIR__),
             'components' => [
                 'db' => [
@@ -38,8 +38,8 @@ class BaseWebTestCase extends \luya\testsuite\cases\WebApplicationTestCase
                 ],
             ],
             'modules' => [
-                'newsadmin' => [
-                    'class' => 'luya\news\admin\Module',
+                'postsadmin' => [
+                    'class' => 'luya\posts\admin\Module',
                 ],
             ],
         ];

@@ -1,8 +1,8 @@
 <?php
 
-namespace luya\news\models\autopost;
+namespace luya\posts\models\autopost;
 
-use luya\news\models\BaseAutopost;
+use luya\posts\models\BaseAutopost;
 
 /**
  * @inheritdoc

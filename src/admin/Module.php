@@ -1,20 +1,23 @@
 <?php
 
-namespace luya\news\admin;
+namespace luya\posts\admin;
 
 use luya\admin\components\AdminMenuBuilder;
 
 /**
- * News Admin Module.
+ * Posts Admin Module.
  *
  * @author Basil Suter <basil@nadar.io>
  */
 final class Module extends \luya\admin\base\Module
 {
+    public $wysiwygOptions = [];
+    
     public $apis = [
-        'api-news-article' => 'luya\news\admin\apis\ArticleController',
-        'api-news-cat' => 'luya\news\admin\apis\CatController',
-        'api-news-autopostconfig' => 'luya\news\admin\apis\AutopostConfigController',
+        'api-posts-article' => 'luya\posts\admin\apis\ArticleController',
+        'api-posts-cat' => 'luya\posts\admin\apis\CatController',
+        'api-posts-autopostconfig' => 'luya\posts\admin\apis\AutopostConfigController',
+        'api-posts-wysiwygconfig' => 'luya\posts\admin\controllers\WysiwygConfigController',
     ];
 
     /**
@@ -23,11 +26,11 @@ final class Module extends \luya\admin\base\Module
     public function getMenu()
     {
         return (new AdminMenuBuilder($this))
-            ->node('news', 'local_library')
-                ->group('news_administrate')
-                    ->itemApi('article', 'newsadmin/article/index', 'edit', 'api-news-article')
-                    ->itemApi('cat', 'newsadmin/cat/index', 'bookmark_border', 'api-news-cat')
-                    ->itemApi('autopost_config', 'newsadmin/autopost-config/index', 'tune', 'api-news-autopostconfig');
+            ->node('posts', 'local_library')
+                ->group('posts_administrate')
+                    ->itemApi('article', 'postsadmin/article/index', 'edit', 'api-posts-article')
+                    ->itemApi('cat', 'postsadmin/cat/index', 'bookmark_border', 'api-posts-cat');
+            //->itemApi('autopost_config', 'postsadmin/autopost-config/index', 'tune', 'api-posts-autopostconfig');
     }
     /**
      * @inheritdoc
@@ -35,21 +38,21 @@ final class Module extends \luya\admin\base\Module
     public function registerComponents()
     {
         return [
-            'newsautopost' => [
-                'class' => 'luya\news\admin\components\Autopost',
+            'postsautopost' => [
+                'class' => 'luya\posts\admin\components\Autopost',
             ],
         ];
     }
 
     public static function onLoad()
     {
-        self::registerTranslation('newsadmin', '@newsadmin/messages', [
-            'newsadmin' => 'newsadmin.php',
+        self::registerTranslation('postsadmin', '@postsadmin/messages', [
+            'postsadmin' => 'postsadmin.php',
         ]);
     }
     
     /**
-     * Translat news messages.
+     * Translat posts messages.
      *
      * @param string $message
      * @param array $params
@@ -57,6 +60,15 @@ final class Module extends \luya\admin\base\Module
      */
     public static function t($message, array $params = [])
     {
-        return parent::baseT('newsadmin', $message, $params);
+        return parent::baseT('postsadmin', $message, $params);
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function getAdminAssets() {
+        return [
+            'luya\posts\admin\assets\WysiwygAssets',
+        ];
     }
 }

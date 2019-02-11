@@ -1,8 +1,8 @@
 <?php
 
 return [
-	'news' => 'Noticias',
-    'news_administrate' => 'Administrar',
+	'posts' => 'Noticias',
+    'posts_administrate' => 'Administrar',
     'article' => 'Entrada de noticias',
     'article_cat_id' => 'Categoría',
     'article_title' => 'Título',

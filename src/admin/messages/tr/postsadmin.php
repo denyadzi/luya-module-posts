@@ -4,8 +4,8 @@ return [
 
 // added translation in 1.0.0-beta5:
 
-    'news' => 'Haberler',
-    'news_administrate' => 'Yönetim',
+    'posts' => 'Haberler',
+    'posts_administrate' => 'Yönetim',
     'article' => 'Haber girdisi',
     'article_cat_id' => 'Kategori',
     'article_title' => 'Başlık',

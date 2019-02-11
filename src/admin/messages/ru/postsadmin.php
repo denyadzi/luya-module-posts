@@ -4,8 +4,8 @@ return [
 
 // added translation in 1.0.0-beta5:
 
-    'news' => 'Новости',
-    'news_administrate' => 'Управлять',
+    'posts' => 'Новости',
+    'posts_administrate' => 'Управлять',
 
     //article
     'article' => 'Новость',

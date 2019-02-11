@@ -4,8 +4,8 @@ return [
 
 // added translation in 1.0.0-beta5:
 
-    'news' => 'News',
-    'news_administrate' => 'Verwalten',
+    'posts' => 'Posts',
+    'posts_administrate' => 'Verwalten',
     'article' => 'Artikel',
     'article_cat_id' => 'Kategorie',
     'article_title' => 'Titel',

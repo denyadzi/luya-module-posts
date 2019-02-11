@@ -1,13 +1,13 @@
 <?php
 
-namespace luya\news\admin\jobs;
+namespace luya\posts\admin\jobs;
 
 use Yii;
 use yii\base\InvalidConfigException;
 use yii\queue\RetryableJob;
 use yii\base\BaseObject;
 use yii\helpers\Json;
-use luya\news\models\Autopost;
+use luya\posts\models\Autopost;
 
 class FacebookAutopost extends BaseObject implements RetryableJob
 {

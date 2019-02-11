@@ -1,15 +1,15 @@
 <?php
 
-namespace luya\news\models;
+namespace luya\posts\models;
 
 use yii\helpers\{Json,ArrayHelper};
 use luya\admin\traits\SoftDeleteTrait;
-use luya\news\admin\Module;
-use luya\news\models\Article;
-use luya\news\models\AutopostConfig;
+use luya\posts\admin\Module;
+use luya\posts\models\Article;
+use luya\posts\models\AutopostConfig;
 
 /**
- * This is the model class for table "news_autopost".
+ * This is the model class for table "posts_autopost".
  *
  * @property int $id
  * @property boolean $is_deleted
@@ -30,7 +30,7 @@ abstract class BaseAutopost extends \yii\db\ActiveRecord
      */
     public static function tableName()
     {
-        return 'news_autopost';
+        return 'posts_autopost';
     }
 
     /**

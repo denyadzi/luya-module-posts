@@ -1,13 +1,13 @@
 <?php
 
-namespace luya\news\frontend\blocks;
+namespace luya\posts\frontend\blocks;
 
 use luya\cms\models\NavItem;
-use luya\news\models\Article;
+use luya\posts\models\Article;
 use luya\cms\base\PhpBlock;
 
 /**
- * Get the latest news from the news system.
+ * Get the latest posts from the posts system.
  *
  * This block requires an application view file which is formated as followed.
  *
@@ -19,7 +19,7 @@ use luya\cms\base\PhpBlock;
  *
  * @author Basil Suter <basil@nadar.io>
  */
-class LatestNews extends PhpBlock
+class LatestPosts extends PhpBlock
 {
     private $_dropdown = [];
 
@@ -30,22 +30,22 @@ class LatestNews extends PhpBlock
 
     public function init()
     {
-        foreach (NavItem::fromModule('news') as $item) {
+        foreach (NavItem::fromModule('posts') as $item) {
             $this->_dropdown[] = ['value' => $item->id, 'label' => $item->title];
         }
     }
 
     public function name()
     {
-        return 'News: Latest Headlines';
+        return 'Posts: Latest Headlines';
     }
 
     public function config()
     {
         return [
             'cfgs' => [
-                ['var' => 'limit', 'label' => 'Anzahl News Einträge', 'type' => 'zaa-text'],
-                ['var' => 'nav_item_id', 'label' => 'Newsseite für Detailansicht', 'type' => 'zaa-select', 'options' => $this->_dropdown],
+                ['var' => 'limit', 'label' => 'Posts limit', 'type' => 'zaa-text'],
+                ['var' => 'nav_item_id', 'label' => 'Post nav item', 'type' => 'zaa-select', 'options' => $this->_dropdown],
             ],
         ];
     }
@@ -53,7 +53,7 @@ class LatestNews extends PhpBlock
     public function extraVars()
     {
         return [
-            'items' => Article::getAvailableNews($this->getCfgValue('limit', 10)),
+            'items' => Article::getAvailable($this->getCfgValue('limit', 10)),
         ];
     }
 

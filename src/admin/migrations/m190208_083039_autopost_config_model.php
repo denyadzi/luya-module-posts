@@ -12,7 +12,7 @@ class m190208_083039_autopost_config_model extends Migration
      */
     public function safeUp()
     {
-        $this->createTable('news_autopost_config', [
+        $this->createTable('posts_autopost_config', [
             'id' => $this->primaryKey(),
             'is_deleted' => $this->boolean()->notNull()->defaultValue(false),
             'type' => $this->string(32)->notNull(),
@@ -23,17 +23,17 @@ class m190208_083039_autopost_config_model extends Migration
             'timestamp_create' => $this->integer(11),
             'timestamp_update' => $this->integer(11),
         ]);
-        $this->addColumn('news_autopost', 'config_id', $this->integer(11)->notNull());
+        $this->addColumn('posts_autopost', 'config_id', $this->integer(11)->notNull());
         $this->addForeignKey('fk_autopost_config_lang',
-                             'news_autopost_config',
+                             'posts_autopost_config',
                              'lang_id',
                              'admin_lang',
                              'id',
                              'CASCADE');
         $this->addForeignKey('fk_autopost_config',
-                             'news_autopost',
+                             'posts_autopost',
                              'config_id',
-                             'news_autopost_config',
+                             'posts_autopost_config',
                              'id',
                              'CASCADE');
     }
@@ -43,10 +43,10 @@ class m190208_083039_autopost_config_model extends Migration
      */
     public function safeDown()
     {
-        $this->dropForeignKey('fk_autopost_config', 'news_autopost');
-        $this->dropForeignKey('fk_autopost_config_lang', 'news_autopost_config');
-        $this->dropColumn('news_autopost', 'config_id');
-        $this->dropTable('news_autopost_config');
+        $this->dropForeignKey('fk_autopost_config', 'posts_autopost');
+        $this->dropForeignKey('fk_autopost_config_lang', 'posts_autopost_config');
+        $this->dropColumn('posts_autopost', 'config_id');
+        $this->dropTable('posts_autopost_config');
     }
 
     /*

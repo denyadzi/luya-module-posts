@@ -4,9 +4,9 @@ return [
 
 // added translation in 1.0.0-beta5:
 
-    'news' => 'News',
-    'news_administrate' => 'Administrate',
-    'article' => 'News entry',
+    'posts' => 'Posts',
+    'posts_administrate' => 'Administrate',
+    'article' => 'Post entry',
     'article_cat_id' => 'Category',
     'article_title' => 'Title',
     'article_text' => 'Content',
@@ -20,7 +20,7 @@ return [
     'article_tag' => 'Tag',
     'cat' => 'Categories',
     'cat_title' => 'Category',
-    'cat_delete_error' => 'This category is used by one or multiple news and can not be deleted.',
+    'cat_delete_error' => 'This category is used by one or multiple posts and can not be deleted.',
     'cat_title_create_error' => 'Please add a category title.',
     'tag' => 'Tags',
     'tag_title' => 'Tag',

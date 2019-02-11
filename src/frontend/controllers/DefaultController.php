@@ -1,15 +1,15 @@
 <?php
 
-namespace luya\news\frontend\controllers;
+namespace luya\posts\frontend\controllers;
 
 use Yii;
-use luya\news\models\Article;
-use luya\news\models\Cat;
+use luya\posts\models\Article;
+use luya\posts\models\Cat;
 use yii\data\ActiveDataProvider;
 use yii\helpers\Html;
 
 /**
- * News Module Default Controller contains actions to display and render views with predefined data.
+ * Posts Module Default Controller contains actions to display and render views with predefined data.
  *
  * @author Basil Suter <basil@nadar.io>
  */

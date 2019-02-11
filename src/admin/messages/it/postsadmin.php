@@ -1,8 +1,8 @@
 <?php
 return [
 // added translation in 1.0.0-beta5:
-    'news' => 'Notizie',
-    'news_administrate' => 'Amministrazione',
+    'posts' => 'Notizie',
+    'posts_administrate' => 'Amministrazione',
     'article' => 'Articoli',
     'article_cat_id' => 'Categoria',
     'article_title' => 'Titolo',

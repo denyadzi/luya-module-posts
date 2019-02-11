@@ -1,11 +1,11 @@
 <?php
 
-namespace luya\news\tests\admin\jobs;
+namespace luya\posts\tests\admin\jobs;
 
-use luya\news\admin\jobs\FacebookAutopost;
-use luya\news\models\autopost\FacebookPost;
+use luya\posts\admin\jobs\FacebookAutopost;
+use luya\posts\models\autopost\FacebookPost;
 
-class FacebookAutopostTest extends \newstests\BaseWebTestCase
+class FacebookAutopostTest extends \poststests\BaseWebTestCase
 {
     public function testExecute_currentLangTitle_isSaved()
     {

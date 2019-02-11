@@ -1,14 +1,14 @@
 <?php
 
-namespace luya\news\admin\components;
+namespace luya\posts\admin\components;
 
 use Yii;
 use yii\base\InvalidArgumentException;
 use luya\admin\helpers\I18n;
-use luya\news\admin\jobs\FacebookAutopost;
-use luya\news\admin\exceptions\NoAutopostMessageException;
-use luya\news\models\{AutopostConfig,Article};
-use luya\news\models\Autopost as AutopostModel;
+use luya\posts\admin\jobs\FacebookAutopost;
+use luya\posts\admin\exceptions\NoAutopostMessageException;
+use luya\posts\models\{AutopostConfig,Article};
+use luya\posts\models\Autopost as AutopostModel;
 
 class Autopost extends \yii\base\BaseObject
 {
