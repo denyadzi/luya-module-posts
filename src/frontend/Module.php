@@ -43,5 +43,6 @@ final class Module extends \luya\base\Module
      */
     public $urlRules = [
         ['pattern' => 'posts/<id:\d+>/<title:[a-zA-Z0-9\-]+>/', 'route' => 'posts/default/detail'],
+        ['pattern' => 'posts/category/<categoryId:\d+>/', 'route' => 'posts/default/category'],
     ];
 }
