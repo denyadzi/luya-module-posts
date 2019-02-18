@@ -120,7 +120,7 @@ class Article extends NgRestModel
             }
             
             if ($config->type == Autopost::TYPE_FACEBOOK) {
-                $curl = curl_init("https://graph.facebook.com/v3.2/debug_token?input_token={$config->access_token}");
+                $curl = curl_init("https://graph.facebook.com/v3.2/me?access_token={$config->access_token}");
                 curl_setopt_array($curl, [
                     CURLOPT_RETURNTRANSFER => true,
                     CURLOPT_CONNECTTIMEOUT => 10, // seconds
@@ -139,7 +139,7 @@ class Article extends NgRestModel
                     $validator->addError($this, $attribute, 'article_autopost_check_error_response');
                     return;
                 }
-                if (! $decoded['is_valid']) {
+                if (! isset($decoded['id'])) {
                     $validator->addError($this, $attribute, 'article_autopost_check_invalid_token');
                     return;
                 }
