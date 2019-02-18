@@ -3,7 +3,7 @@
 namespace luya\posts\models;
 
 use Yii;
-use yii\helpers\Inflector;
+use yii\helpers\{Inflector,Json};
 use luya\helpers\Url;
 use luya\posts\admin\Module;
 use luya\admin\aws\TaggableActiveWindow;

@@ -35,6 +35,7 @@ return [
     'article_autopost_check_no_response' => '@TODO',
     'article_autopost_check_error_response' => '@TODO',
     'article_autopost_check_invalid_token' => '@TODO',
+    'autopost_config' => '@TODO',
     'autopost_config_id' => '@TODO',
     'autopost_config_type' => '@TODO',
     'autopost_config_access_token' => '@TODO',
