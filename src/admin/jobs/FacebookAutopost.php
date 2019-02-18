@@ -65,7 +65,7 @@ class FacebookAutopost extends BaseObject implements RetryableJob
             CURLOPT_POST => true,
             CURLOPT_RETURNTRANSFER => true,
             CURLOPT_CONNECTTIMEOUT => 10, // seconds
-            CURLOPT_TIMEOUT => 5, // seconds
+            CURLOPT_TIMEOUT => 15, // seconds
             CURLOPT_POSTFIELDS => $this->getFieldsData(),
         ]);
 

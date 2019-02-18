@@ -10,6 +10,7 @@ use luya\admin\aws\TaggableActiveWindow;
 use luya\admin\ngrest\base\NgRestModel;
 use luya\admin\traits\SoftDeleteTrait;
 use luya\admin\traits\TaggableTrait;
+use luya\posts\models\{AutopostConfig,Autopost};
 
 /**
  * This is the model class for table "posts_article".
@@ -97,7 +98,54 @@ class Article extends NgRestModel
             [['cat_id', 'create_user_id', 'update_user_id', 'timestamp_create', 'timestamp_update', 'timestamp_display_from', 'timestamp_display_until'], 'integer'],
             [['is_deleted', 'is_display_limit'], 'boolean'],
             [['image_id'], 'safe'],
+            ['autopost', 'validateAutopostTokens', 'skipOnError' => true],
         ];
+    }
+
+    public function validateAutopostTokens($attribute, $params, $validator)
+    {
+        if (! $this->_autopost) {
+            return;
+        }
+        $autopostConfig = AutopostConfig::find()->all();
+        if (empty($autopostConfig)) {
+            $validator->addError($this, $attribute, 'article_autopost_no_configs');
+            return;
+        }
+        $valid = true;
+        foreach ($autopostConfig as $config) {
+            if (empty($config->access_token)) {
+                $validator->addError($this, $attribute, 'article_autopost_config_empty_token');
+                return;
+            }
+            
+            if ($config->type == Autopost::TYPE_FACEBOOK) {
+                $curl = curl_init("https://graph.facebook.com/v3.2/debug_token?input_token={$config->access_token}");
+                curl_setopt_array($curl, [
+                    CURLOPT_RETURNTRANSFER => true,
+                    CURLOPT_CONNECTTIMEOUT => 10, // seconds
+                    CURLOPT_TIMEOUT => 15, // seconds
+                ]);
+
+                $result = curl_exec($curl);
+
+                if (false === $result) {
+                    $validator->addError($this, $attribute, 'article_autopost_check_no_response');
+                    return;
+                }
+
+                $decoded = Json::decode($result);
+                if (isset($decoded['error'])) {
+                    $validator->addError($this, $attribute, 'article_autopost_check_error_response');
+                    return;
+                }
+                if (! $decoded['is_valid']) {
+                    $validator->addError($this, $attribute, 'article_autopost_check_invalid_token');
+                    return;
+                }
+            }
+        }
+        return $valid;
     }
 
     /**
@@ -158,6 +206,11 @@ class Article extends NgRestModel
         $this->_autopost = $autopost;
     }
 
+    public function getAutopost()
+    {
+        return $this->_autopost;
+    }
+
     /**
      *
      * @return string
@@ -212,7 +265,7 @@ class Article extends NgRestModel
     {
         return [
             [['list'], ['cat_id', 'title', 'timestamp_create', 'image_id']],
-            [['create'], ['cat_id', 'title', 'teaser_text', /*'autopost',*/ 'text', 'timestamp_create', 'timestamp_display_from', 'is_display_limit', 'timestamp_display_until', 'image_id', 'image_list', 'file_list']],
+            [['create'], ['cat_id', 'title', 'teaser_text', 'autopost', 'text', 'timestamp_create', 'timestamp_display_from', 'is_display_limit', 'timestamp_display_until', 'image_id', 'image_list', 'file_list']],
             [['update'], ['cat_id', 'title', 'teaser_text', 'text', 'timestamp_create', 'timestamp_display_from', 'is_display_limit', 'timestamp_display_until', 'image_id', 'image_list', 'file_list']],
             [['delete'], true],
         ];

@@ -12,6 +12,8 @@ use luya\admin\components\AdminMenuBuilder;
 final class Module extends \luya\admin\base\Module
 {
     public $wysiwygOptions = [];
+
+    public $fbAppId;
     
     public $apis = [
         'api-posts-article' => 'luya\posts\admin\apis\ArticleController',
@@ -29,8 +31,8 @@ final class Module extends \luya\admin\base\Module
             ->node('posts', 'local_library')
                 ->group('posts_administrate')
                     ->itemApi('article', 'postsadmin/article/index', 'edit', 'api-posts-article')
-                    ->itemApi('cat', 'postsadmin/cat/index', 'bookmark_border', 'api-posts-cat');
-            //->itemApi('autopost_config', 'postsadmin/autopost-config/index', 'tune', 'api-posts-autopostconfig');
+                    ->itemApi('cat', 'postsadmin/cat/index', 'bookmark_border', 'api-posts-cat')
+                    ->itemApi('autopost_config', 'postsadmin/autopost-config/index', 'tune', 'api-posts-autopostconfig');
     }
     /**
      * @inheritdoc
@@ -68,7 +70,15 @@ final class Module extends \luya\admin\base\Module
      */
     public function getAdminAssets() {
         return [
-            'luya\posts\admin\assets\WysiwygAssets',
+            'luya\posts\admin\assets\WysiwygAsset',
+            'luya\posts\admin\assets\AutopostConfigAsset',
+        ];
+    }
+
+    public function getJsTranslationMessages()
+    {
+        return [
+            'js_autopost_config_fb_login_fail',
         ];
     }
 }

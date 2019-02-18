@@ -30,4 +30,15 @@ return [
     
     'teaser_text' => 'Teaser Text',
     'article_autopost' => 'Autopost',
+    'article_autopost_no_configs' => '@TODO',
+    'article_autopost_config_empty_token' => '@TODO',
+    'article_autopost_check_no_response' => '@TODO',
+    'article_autopost_check_error_response' => '@TODO',
+    'article_autopost_check_invalid_token' => '@TODO',
+    'autopost_config_id' => '@TODO',
+    'autopost_config_type' => '@TODO',
+    'autopost_config_access_token' => '@TODO',
+    'autopost_config_lang_id' => '@TODO',
+    'autopost_config_with_link' => '@TODO',
+    'autopost_config_with_message' => '@TODO',
 ];

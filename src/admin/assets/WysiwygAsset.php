@@ -5,9 +5,9 @@ namespace luya\posts\admin\assets;
 /**
  * Asset file for tinymce
  */
-class WysiwygAssets extends \luya\web\Asset
+class WysiwygAsset extends \luya\web\Asset
 {
-    public $sourcePath = '@postsadmin/resources';
+    public $sourcePath = '@postsadmin/resources/wysiwyg';
 
     public $js = [
         'js/directives.js',
@@ -16,6 +16,6 @@ class WysiwygAssets extends \luya\web\Asset
 
     public $depends = [
         'luya\admin\assets\Main',
-        'luya\posts\admin\assets\TinymceAssets'
+        'luya\posts\admin\assets\TinymceAsset'
     ];
 }

@@ -94,7 +94,9 @@ class AutopostConfig extends NgRestModel
     public function ngRestAttributeTypes()
     {
         return [
-            'access_token' => 'textarea',
+            'access_token' => [
+                'class' => 'luya\posts\admin\plugins\OAuthTokenPlugin',
+            ],
             'lang_id' => [
                 'selectModel',
                 'modelClass' => Lang::className(),
@@ -102,7 +104,7 @@ class AutopostConfig extends NgRestModel
                 'valueField' => 'id',
             ],
             'type' => [
-                'selectArray',
+                'class' => 'luya\posts\admin\plugins\SelectOAuthPlugin',
                 'data' => [
                     Autopost::TYPE_FACEBOOK => 'Facebook',
                 ],
