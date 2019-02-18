@@ -78,7 +78,7 @@ final class Module extends \luya\admin\base\Module
     public function getJsTranslationMessages()
     {
         return [
-            'js_autopost_config_fb_login_fail',
+            'js_autopost_config_fb_login_fail', 'js_autopost_config_label_renew_token',
         ];
     }
 }

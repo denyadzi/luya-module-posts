@@ -42,4 +42,6 @@ return [
     'autopost_config_lang_id' => '@TODO',
     'autopost_config_with_link' => '@TODO',
     'autopost_config_with_message' => '@TODO',
+    'js_autopost_config_label_renew_token' => '@TODO',
+    'js_autopost_config_fb_login_fail' => '@TODO',
 ];

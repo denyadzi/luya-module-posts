@@ -41,6 +41,11 @@ zaa.directive("selectOauth", function() {
           $scope.closeSelect();
         }
       });
+      $scope.$on('renewOAuthToken', function() {
+        if ($scope.model == 'facebook') {
+          fbLogin();
+        }
+      });
 
       $timeout(function(){
         $scope.$watch(function() { return $scope.model }, function(n, o) {
@@ -54,13 +59,8 @@ zaa.directive("selectOauth", function() {
               $scope.model = $scope.initvalue;
             }
           }
-          else if (n == 'facebook') {
-            if (typeof FB !== 'undefined') {
-              FB.login(fbLoginCallback, {
-                auth_type: 'reauthenticate',
-                scope: 'manage_pages,publish_pages',
-              });
-            }
+          else if (n == 'facebook' && n !== o) {
+            fbLogin();
           }
         });
         $scope.$watch('selectedPageToken', function(n, o) {
@@ -71,6 +71,14 @@ zaa.directive("selectOauth", function() {
         });
       });
 
+      function fbLogin() {
+        if (typeof FB !== 'undefined') {
+          FB.login(fbLoginCallback, {
+            auth_type: 'reauthenticate',
+            scope: 'manage_pages,publish_pages',
+          });
+        }
+      }
       function fbLoginCallback(response) {
         if (response.authResponse) {
           FB.api('/me/accounts', function(response) {
@@ -195,11 +203,19 @@ zaa.directive("oauthToken", function() {
     controller: ['$scope', '$rootScope', function($scope, $rootScope) {
       $rootScope.$on('setOAuthToken', function() {
         $scope.model = $rootScope.oauthToken;
-        console.log($scope.model);
       });
+      $scope.renewToken = function() {
+        $rootScope.$broadcast('renewOAuthToken');
+        return false;
+      }
     }],
     template: function() {
-      return '<input type="hidden" ng-model="model" name="{{ id }}" id="{{ id }}"/>';
+      return '<div class="form-group form-side-by-side">' +
+               '<input type="hidden" ng-model="model" name="{{ id }}" id="{{ id }}"/>' +
+               '<a class="btn" ng-click="renewToken()">' +
+                 i18n['js_autopost_config_label_renew_token'] +
+               '</a>' +
+             '</div>';
     },
   };
 });
