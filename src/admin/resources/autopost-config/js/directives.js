@@ -12,7 +12,7 @@ zaa.directive("selectOauth", function() {
       "id": "@fieldid",
       "initvalue": "@initvalue"
     },
-    controller: ['$scope', '$timeout', '$rootScope', 'AdminToastService', function($scope, $timeout, $rootScope, AdminToastService) {
+    controller: ['$scope', '$timeout', '$rootScope', 'AdminToastService', '$http', function($scope, $timeout, $rootScope, AdminToastService, $http) {
 
       /* default scope values */
 
@@ -81,9 +81,13 @@ zaa.directive("selectOauth", function() {
       }
       function fbLoginCallback(response) {
         if (response.authResponse) {
-          FB.api('/me/accounts', function(response) {
-            $scope.pageTokens = response.data;
-            $scope.showPageSelect = true;
+          $http.post('/admin/api-posts-autopostconfig/extend-facebook-token', {user_token: response.authResponse.accessToken}).then(function(response) {
+            var extendedToken = response.data.long_user_access_token;
+
+            FB.api('/me/accounts', 'get', {access_token: extendedToken}, function(response) {
+              $scope.pageTokens = response.data;
+              $scope.showPageSelect = true;
+            });
           });
         } else {
           AdminToastService.error(i18n['js_autopost_config_fb_login_fail']);
@@ -199,6 +203,7 @@ zaa.directive("oauthToken", function() {
       "label": "@label",
       "i18n": "@i18n",
       "id": "@fieldid",
+      "showRenew": "@showrenew",
     },
     controller: ['$scope', '$rootScope', function($scope, $rootScope) {
       $rootScope.$on('setOAuthToken', function() {
@@ -211,10 +216,15 @@ zaa.directive("oauthToken", function() {
     }],
     template: function() {
       return '<div class="form-group form-side-by-side">' +
-               '<input type="hidden" ng-model="model" name="{{ id }}" id="{{ id }}"/>' +
-               '<a class="btn" ng-click="renewToken()">' +
-                 i18n['js_autopost_config_label_renew_token'] +
-               '</a>' +
+               '<div class="form-side form-side-label">' +
+                 '&nbsp;' +
+               '</div>' +
+               '<div class="form-side">' +
+                 '<input type="hidden" ng-model="model" name="{{ id }}" id="{{ id }}"/>' +
+                 '<a class="btn" ng-click="renewToken()" ng-show="showRenew == 1">' +
+                   i18n['js_autopost_config_label_renew_token'] +
+                 '</a>' +
+               '</div>' +
              '</div>';
     },
   };

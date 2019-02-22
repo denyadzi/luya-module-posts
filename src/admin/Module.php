@@ -2,6 +2,7 @@
 
 namespace luya\posts\admin;
 
+use yii\base\InvalidConfigException;
 use luya\admin\components\AdminMenuBuilder;
 
 /**
@@ -14,6 +15,12 @@ final class Module extends \luya\admin\base\Module
     public $wysiwygOptions = [];
 
     public $fbAppId;
+
+    public $fbAppSecret;
+
+    public $encryptStoredTokens = true;
+
+    public $encryptTokensSecret = 'CHANGE ME';
     
     public $apis = [
         'api-posts-article' => 'luya\posts\admin\apis\ArticleController',
@@ -21,6 +28,18 @@ final class Module extends \luya\admin\base\Module
         'api-posts-autopostconfig' => 'luya\posts\admin\apis\AutopostConfigController',
         'api-posts-wysiwygconfig' => 'luya\posts\admin\controllers\WysiwygConfigController',
     ];
+
+    /**
+     * @inheritdoc
+     */
+    public function init()
+    {
+        parent::init();
+        $s =& $this->encryptTokensSecret;
+        if ($this->encryptStoredTokens && (empty($s) || 'CHANGE ME' === $s)) {
+            throw new InvalidConfigException('Please, change the `encryptTokensSecret` property value if you need token storage encryption (which is preffered). Otherwise, set `encryptStoredTokens` property to false to disable encryption');
+        }
+    }
 
     /**
      * @inheritdoc

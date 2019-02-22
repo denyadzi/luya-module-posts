@@ -17,7 +17,7 @@
     },
     {
       "name": "Dzianis Jackievic",
-      "email": "mail@miesta.by"
+      "email": "dev@miesta.by"
     }
   ],
   "support" : {
@@ -25,7 +25,8 @@
   },
   "require": {
     "bower-asset/angular-ui-tinymce" : "~0.0.18",
-    "luyadev/luya-module-admin": "dev-master"
+    "luyadev/luya-module-admin": "dev-master",
+    "ext-curl": "*"
   },
   "require-dev" : {
     "luyadev/luya-testsuite" : "~1.0.0"

@@ -3,10 +3,11 @@
 namespace luya\posts\frontend\controllers;
 
 use Yii;
-use luya\posts\models\Article;
-use luya\posts\models\Cat;
 use yii\data\ActiveDataProvider;
 use yii\helpers\Html;
+use luya\admin\filters\LargeThumbnail;
+use luya\posts\models\Article;
+use luya\posts\models\Cat;
 
 /**
  * Posts Module Default Controller contains actions to display and render views with predefined data.
@@ -15,6 +16,84 @@ use yii\helpers\Html;
  */
 class DefaultController extends \luya\web\Controller
 {
+    /**
+     * @var string
+     * @since 2.1.0
+     */
+    const LINK_CANONICAL = 'linkCanonical';
+
+    /**
+     * @var string og:type key which is used for meta registration. Use this constant in order to override the default implementation.
+     * @since 2.1.0
+     */
+    const META_OG_TYPE = 'ogType';
+    
+    /**
+     * @var string twitter:card key which is used for meta registration. Use this constant in order to override the default implementation.
+     * @since 2.1.0
+     */
+    const META_TWITTER_CARD = 'twitterCard';
+    
+    /**
+     * @var string og:title key which is used for meta registration. Use this constant in order to override the default implementation.
+     * @since 2.1.0
+     */
+    const META_OG_TITLE = 'ogTitle';
+    
+    /**
+     * @var string twitter:title key which is used for meta registration. Use this constant in order to override the default implementation.
+     * @since 2.1.0
+     */
+    const META_TWITTER_TITLE = 'twitterTitle';
+    
+    /**
+     * @var string og:url key which is used for meta registration. Use this constant in order to override the default implementation.
+     * @since 2.1.0
+     */
+    const META_OG_URL = 'ogUrl';
+    
+    /**
+     * @var string twitter:url key which is used for meta registration. Use this constant in order to override the default implementation.
+     * @since 2.1.0
+     */
+    const META_TWITTER_URL = 'twitterUrl';
+
+    /**
+     * @var string description meta key which is used for meta registration. Use this constant in order to override the default implementation.
+     * @since 2.1.0
+     */
+    const META_DESCRIPTION = 'metaDescription';
+    
+    /**
+     * @var string og:description key which is used for meta registration. Use this constant in order to override the default implementation.
+     * @since 2.1.0
+     */
+    const META_OG_DESCRIPTION = 'ogDescription';
+    
+    /**
+     * @var string twitter:description key which is used for meta registration. Use this constant in order to override the default implementation.
+     * @since 2.1.0
+     */
+    const META_TWITTER_DESCRIPTION = 'twitterDescription';
+    
+    /**
+     * @var string keywords meta key which is used for meta registration. Use this constant in order to override the default implementation.
+     * @since 2.1.0
+     */
+    const META_KEYWORDS = 'metaKeywords';
+
+    /**
+     * @var string The og:image constant.
+     * @since 2.1.0
+     */
+    const META_OG_IMAGE = 'ogImage';
+    
+    /**
+     * @var string The twitter:image constant.
+     * @since 2.1.0
+     */
+    const META_TWITTER_IMAGE = 'twitterImage';
+    
     /**
      * Get Article overview.
      *
@@ -148,6 +227,36 @@ class DefaultController extends \luya\web\Controller
         
         if (!$model) {
             return $this->goHome();
+        }
+
+        $this->view->title = $model->title;
+
+        $this->view->registerMetaTag(['name' => 'og:type', 'content' => 'website'], self::META_OG_TYPE);
+        $this->view->registerMetaTag(['name' => 'twitter:card', 'content' => 'summary'], self::META_TWITTER_CARD);
+        
+        $this->view->registerMetaTag(['name' => 'og:title', 'content' => $this->view->title], self::META_OG_TITLE);
+        $this->view->registerMetaTag(['name' => 'twitter:title', 'content' => $this->view->title], self::META_TWITTER_TITLE);
+        
+        $this->view->registerLinkTag(['rel' => 'canonical', 'href' => Yii::$app->request->absoluteUrl], self::LINK_CANONICAL);
+        $this->view->registerMetaTag(['name' => 'og:url', 'content' => Yii::$app->request->absoluteUrl], self::META_OG_URL);
+        $this->view->registerMetaTag(['name' => 'twitter:url', 'content' => Yii::$app->request->absoluteUrl], self::META_TWITTER_URL);
+
+        if (! empty($model->teaser_text)) {
+            $this->view->registerMetaTag(['name' => 'description', 'content' => $model->teaser_text], self::META_DESCRIPTION);
+            $this->view->registerMetaTag(['name' => 'og:description', 'content' => $model->teaser_text], self::META_OG_DESCRIPTION);
+            $this->view->registerMetaTag(['name' => 'twitter:description', 'content' => $model->teaser_text], self::META_TWITTER_DESCRIPTION);
+        }
+        
+        // if (! empty($model->keywords)) {
+        //     $this->view->registerMetaTag(['name' => 'keywords', 'content' => implode(", ", $currentMenu->keywords)], self::META_KEYWORDS);
+        // }
+
+        if (! empty($model->image_id)) {
+            $image = Yii::$app->storage->getImage($model->image_id);
+            if ($image) {
+                $this->view->registerMetaTag(['name' => 'og:image', 'content' => $image->applyFilter(LargeThumbnail::identifier())->sourceAbsolute], self::META_OG_IMAGE);
+                $this->view->registerMetaTag(['name' => 'twitter:image', 'content' => $image->applyFilter(LargeThumbnail::identifier())->sourceAbsolute], self::META_TWITTER_IMAGE);
+            }
         }
         
         return $this->render('detail', [

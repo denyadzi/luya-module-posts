@@ -97,3 +97,8 @@ use yii\widgets\LinkPager;
 ```
 
 The above examples will just dump all the data from the model active records.
+
+## TODO
+
+* Test token encryption  
+* Document  

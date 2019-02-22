@@ -11,6 +11,18 @@ class OAuthTokenPlugin extends Hidden
      */
     public function renderCreate($id, $ngModel)
     {
-        return $this->createFormTag('oauth-token', $id, $ngModel);
+        return $this->createFormTag('oauth-token', $id, $ngModel, [
+            'showRenew' => 0,
+        ]);
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function renderUpdate($id, $ngModel)
+    {
+        return $this->createFormTag('oauth-token', $id, $ngModel, [
+            'showRenew' => 1,
+        ]);
     }
 }

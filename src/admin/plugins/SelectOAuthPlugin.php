@@ -13,7 +13,7 @@ class SelectOAuthPlugin extends SelectArray
     public function renderCreate($id, $ngModel)
     {
         return $this->createFormTag('select-oauth', $id, $ngModel, [
-            'fbappid' => Yii::$app->controller->module->fbAppId,
+            'fbappid' => Yii::$app->getModule('postsadmin')->fbAppId,
             'initvalue' => $this->initValue,
             'options' => $this->getServiceName('selectdata'),
         ]);

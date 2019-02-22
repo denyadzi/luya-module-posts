@@ -46,6 +46,43 @@ class AutopostConfig extends NgRestModel
     /**
      * @inheritdoc
      */
+    public function init()
+    {
+        parent::init();
+        $this->on(self::EVENT_BEFORE_INSERT, [$this, 'eventBeforeInsert']);
+        $this->on(self::EVENT_BEFORE_UPDATE, [$this, 'eventBeforeUpdate']);
+        $this->on(self::EVENT_AFTER_FIND, [$this, 'eventAfterFind']);
+    }
+
+    public function eventBeforeInsert()
+    {
+        $this->encryptTokenIfNeeded();
+    }
+
+    public function eventBeforeUpdate()
+    {
+        $this->encryptTokenIfNeeded();        
+    }
+
+    private function encryptTokenIfNeeded()
+    {
+        $postsadmin = Yii::$app->getModule('postsadmin');
+        if ($postsadmin->encryptStoredTokens) {
+            $this->access_token = Yii::$app->security->encryptByPassword($this->access_token, $postsadmin->encryptTokensSecret);
+        }
+    }
+
+    public function eventAfterFind()
+    {
+        $postsadmin = Yii::$app->getModule('postsadmin');
+        if ($postsadmin->encryptStoredTokens) {
+            $this->access_token = Yii::$app->security->decryptByPassword($this->access_token, $postsadmin->encryptTokensSecret);
+        }
+    }
+    
+    /**
+     * @inheritdoc
+     */
     public function behaviors()
     {
         return ArrayHelper::merge(parent::behaviors(), [
@@ -80,12 +117,22 @@ class AutopostConfig extends NgRestModel
         return [
             [['access_token', 'lang_id', 'type'], 'required'],
             [['access_token'], 'string'],
+            ['access_token', 'validateAutopostParameters', 'skipOnError' => true],
             [['type'], 'string', 'max' => 32],
             [['with_link', 'with_message', 'is_deleted'], 'boolean'],
             [['with_link', 'with_message', 'is_deleted'], 'default', 'value' => false],
             [['with_message'], 'required', 'isEmpty' => function($v) { return empty($v); }, 'when' => function($model){ return empty($model->with_link); }, 'message' => Module::t('autopost_config_error_empty_link_and_message')],
             [['lang_id'], 'exist', 'skipOnError' => true, 'targetClass' => Lang::className(), 'targetAttribute' => ['lang_id' => 'id']],
         ];
+    }
+
+    public function validateAutopostParameters($attribute, $params, $validator)
+    {
+        $postsadmin = Yii::$app->getModule('postsadmin');
+        if ($this->type == Autopost::TYPE_FACEBOOK && (empty($postsadmin->fbAppId) || empty($postsadmin->fbAppSecret))) {
+            $validator->addError($this, $attribute, Module::t('autopost_config_exception_invalid_type_configuration: {type}', ['type' => $this->type]));
+            return;
+        }
     }
 
     /**
