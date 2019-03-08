@@ -4,7 +4,7 @@ namespace poststests;
 
 use luya\testsuite\fixtures\ActiveRecordFixture;
 use luya\admin\models\Lang;
-use luya\posts\models\{Autopost,Article,Cat,AutopostConfig};
+use luya\posts\models\{Autopost,Article,Cat,AutopostConfig,AutopostQueueJob};
 
 class BaseWebTestCase extends \luya\testsuite\cases\WebApplicationTestCase
 {
@@ -18,6 +18,8 @@ class BaseWebTestCase extends \luya\testsuite\cases\WebApplicationTestCase
     protected $langFixture;
     /** @var ActiveRecordFixture */
     protected $autopostConfigFixture;
+    /** @var ActiveRecordFixture */
+    protected $autopostQueueFixture;
     
     public function getConfigArray()
     {
@@ -40,6 +42,7 @@ class BaseWebTestCase extends \luya\testsuite\cases\WebApplicationTestCase
             'modules' => [
                 'postsadmin' => [
                     'class' => 'luya\posts\admin\Module',
+                    'encryptStoredTokens' => false,
                 ],
             ],
         ];
@@ -120,6 +123,15 @@ class BaseWebTestCase extends \luya\testsuite\cases\WebApplicationTestCase
                 ],
             ],
         ]);
+        $this->autopostQueueFixture = new ActiveRecordFixture([
+            'modelClass' => AutopostQueueJob::className(),
+            'fixtureData' => [
+                'model1' => [
+                    'id' => 1,
+                    'job_data' => '{}',
+                ],
+            ],
+        ]);
     }
 
     public function beforeTearDown()
@@ -129,5 +141,6 @@ class BaseWebTestCase extends \luya\testsuite\cases\WebApplicationTestCase
         $this->articleFixture->cleanup();
         $this->catFixture->cleanup();
         $this->langFixture->cleanup();
+        $this->autopostQueueFixture->cleanup();
     }
 }

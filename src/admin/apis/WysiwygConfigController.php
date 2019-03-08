@@ -1,6 +1,6 @@
 <?php
 
-namespace luya\posts\admin\controllers;
+namespace luya\posts\admin\apis;
 
 /**
  * Config for module

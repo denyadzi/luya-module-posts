@@ -18,6 +18,8 @@ final class Module extends \luya\admin\base\Module
 
     public $fbAppSecret;
 
+    public $vkAppId;
+
     public $encryptStoredTokens = true;
 
     public $encryptTokensSecret = 'CHANGE ME';
@@ -26,7 +28,18 @@ final class Module extends \luya\admin\base\Module
         'api-posts-article' => 'luya\posts\admin\apis\ArticleController',
         'api-posts-cat' => 'luya\posts\admin\apis\CatController',
         'api-posts-autopostconfig' => 'luya\posts\admin\apis\AutopostConfigController',
-        'api-posts-wysiwygconfig' => 'luya\posts\admin\controllers\WysiwygConfigController',
+        'api-posts-wysiwygconfig' => 'luya\posts\admin\apis\WysiwygConfigController',
+        'api-posts-socialappsconfig' => 'luya\posts\admin\apis\SocialAppsConfigController',
+        'api-posts-autopostqueuejob' => 'luya\posts\admin\apis\AutopostQueueJobController',
+    ];
+
+    public $apiRules = [
+        'api-posts-autopostqueuejob' => [
+            'extraPatterns' => [
+                'POST {id}/reserve' => 'reserve',
+                'POST {id}/finish' => 'finish',
+            ],
+        ],
     ];
 
     /**
@@ -51,7 +64,8 @@ final class Module extends \luya\admin\base\Module
                 ->group('posts_administrate')
                     ->itemApi('article', 'postsadmin/article/index', 'edit', 'api-posts-article')
                     ->itemApi('cat', 'postsadmin/cat/index', 'bookmark_border', 'api-posts-cat')
-                    ->itemApi('autopost_config', 'postsadmin/autopost-config/index', 'tune', 'api-posts-autopostconfig');
+                    ->itemApi('autopost_config', 'postsadmin/autopost-config/index', 'tune', 'api-posts-autopostconfig')
+                    ->itemApi('autopost_queue_job', 'postsadmin/autopost-queue-job/index', 'playlist_play', 'api-posts-autopostqueuejob');
     }
     /**
      * @inheritdoc
@@ -91,6 +105,7 @@ final class Module extends \luya\admin\base\Module
         return [
             'luya\posts\admin\assets\WysiwygAsset',
             'luya\posts\admin\assets\AutopostConfigAsset',
+            'luya\posts\admin\assets\AutopostQueueAsset',
         ];
     }
 

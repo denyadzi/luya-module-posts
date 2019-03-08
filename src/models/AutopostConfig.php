@@ -22,6 +22,7 @@ use luya\posts\admin\Module;
  * @property int $lang_id
  * @property tinyint $with_link
  * @property tinyint $with_message
+ * @property string $owner_id
  */
 class AutopostConfig extends NgRestModel
 {
@@ -106,6 +107,7 @@ class AutopostConfig extends NgRestModel
             'lang_id' => Module::t('autopost_config_lang_id'),
             'with_link' => Module::t('autopost_config_with_link'),
             'with_message' => Module::t('autopost_config_with_message'),
+            'owner_id' => Module::t('autopost_config_owner_id'),
         ];
     }
 
@@ -115,7 +117,7 @@ class AutopostConfig extends NgRestModel
     public function rules()
     {
         return [
-            [['access_token', 'lang_id', 'type'], 'required'],
+            [['lang_id', 'type'], 'required'],
             [['access_token'], 'string'],
             ['access_token', 'validateAutopostParameters', 'skipOnError' => true],
             [['type'], 'string', 'max' => 32],
@@ -123,6 +125,7 @@ class AutopostConfig extends NgRestModel
             [['with_link', 'with_message', 'is_deleted'], 'default', 'value' => false],
             [['with_message'], 'required', 'isEmpty' => function($v) { return empty($v); }, 'when' => function($model){ return empty($model->with_link); }, 'message' => Module::t('autopost_config_error_empty_link_and_message')],
             [['lang_id'], 'exist', 'skipOnError' => true, 'targetClass' => Lang::className(), 'targetAttribute' => ['lang_id' => 'id']],
+            [['owner_id'], 'string', 'max' => 512],
         ];
     }
 
@@ -153,8 +156,13 @@ class AutopostConfig extends NgRestModel
             'type' => [
                 'class' => 'luya\posts\admin\plugins\SelectOAuthPlugin',
                 'data' => [
-                    Autopost::TYPE_FACEBOOK => 'Facebook',
+                    Autopost::TYPE_FACEBOOK => 'Facebook Page',
+                    Autopost::TYPE_VK_ACCOUNT => 'Vkontakte Account',
                 ],
+            ],
+            'owner_id' => [
+                'class' => 'luya\posts\admin\plugins\HidableTextPlugin',
+                'showEvent' => 'showVkFields',
             ],
             'with_link' => [
                 'toggleStatus',
@@ -182,7 +190,7 @@ class AutopostConfig extends NgRestModel
     {
         return [
             ['list', ['type', 'lang_id', 'with_link', 'with_message']],
-            [['create', 'update'], ['type', 'access_token', 'lang_id', 'with_link', 'with_message']],
+            [['create', 'update'], ['type', 'access_token', 'owner_id', 'lang_id', 'with_link', 'with_message']],
             ['delete', true],
         ];
     }

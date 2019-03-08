@@ -2,11 +2,12 @@
 
 namespace luya\posts\models;
 
-use yii\helpers\{Json,ArrayHelper};
+use yii\helpers\ArrayHelper;
 use luya\admin\traits\SoftDeleteTrait;
 use luya\posts\admin\Module;
 use luya\posts\models\Article;
 use luya\posts\models\AutopostConfig;
+use luya\posts\traits\JsonAttributesTrait;
 
 /**
  * This is the model class for table "posts_autopost".
@@ -24,6 +25,7 @@ use luya\posts\models\AutopostConfig;
 abstract class BaseAutopost extends \yii\db\ActiveRecord
 {
     use SoftDeleteTrait;
+    use JsonAttributesTrait;
     
     /**
      * {@inheritdoc}
@@ -36,49 +38,6 @@ abstract class BaseAutopost extends \yii\db\ActiveRecord
     /**
      * @inheritdoc
      */
-    public function init()
-    {
-        parent::init();
-        $this->on(self::EVENT_AFTER_FIND, [$this, 'eventAfterFind']);
-        $this->on(self::EVENT_BEFORE_UPDATE, [$this, 'eventBeforeUpdate']);
-        $this->on(self::EVENT_BEFORE_INSERT, [$this, 'eventBeforeInsert']);
-        $this->on(self::EVENT_BEFORE_VALIDATE, [$this, 'eventBeforeValidate']);
-    }
-
-    public function eventAfterFind()
-    {
-        if ($this->post_data) {
-            $this->post_data = Json::decode($this->post_data);
-        }
-    }
-
-    public function eventBeforeUpdate()
-    {
-        $this->prepareSavePostData();
-    }
-
-    public function eventBeforeInsert()
-    {
-        $this->prepareSavePostData();
-    }
-
-    public function eventBeforeValidate()
-    {
-        $this->prepareSavePostData();
-    }
-    
-    private function prepareSavePostData()
-    {
-        if ($this->post_data) {
-            $this->post_data = Json::encode($this->post_data);
-        } else {
-            $this->post_data = '';
-        }
-    }
-    
-    /**
-     * @inheritdoc
-     */
     public function behaviors()
     {
         return ArrayHelper::merge(parent::behaviors(), [
@@ -86,6 +45,18 @@ abstract class BaseAutopost extends \yii\db\ActiveRecord
                 'class' => '\yii\behaviors\TimestampBehavior',
                 'createdAtAttribute' => 'timestamp_create',
                 'updatedAtAttribute' => 'timestamp_update',
+            ],
+            [
+                'class' => '\yii\behaviors\AttributesBehavior',
+                'attributes' => [
+                    'post_data' => [
+                        self::EVENT_AFTER_FIND => [$this, 'attributeJsonDecode'],
+                        self::EVENT_BEFORE_UPDATE => [$this, 'attributeJsonEncode'],
+                        self::EVENT_BEFORE_INSERT => [$this, 'attributeJsonEncode'],
+                        self::EVENT_BEFORE_VALIDATE => [$this, 'attributeJsonEncode'],
+                        self::EVENT_AFTER_VALIDATE => [$this, 'attributeJsonDecode'],
+                    ],
+                ],
             ],
         ]);
     }

@@ -17,7 +17,10 @@ class PostsTest extends WebApplicationTestCase
 			'id' => 'poststest',
 			'basePath' => dirname(__DIR__),
 			'modules' => [
-				'postsadmin' => 'luya\posts\admin\Module',
+				'postsadmin' => [
+                    'class' => 'luya\posts\admin\Module',
+                    'encryptStoredTokens' => false,
+                ],
 			],
 			'components' => [
 				'db' => [

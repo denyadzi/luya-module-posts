@@ -114,11 +114,6 @@ class Article extends NgRestModel
         }
         $valid = true;
         foreach ($autopostConfig as $config) {
-            if (empty($config->access_token)) {
-                $validator->addError($this, $attribute, Module::t('article_autopost_config_empty_token: {id}', ['id' => $config->id]));
-                return;
-            }
-            
             if ($config->type == Autopost::TYPE_FACEBOOK) {
                 $curl = curl_init("https://graph.facebook.com/v3.2/me?access_token={$config->access_token}");
                 curl_setopt_array($curl, [
@@ -277,7 +272,7 @@ class Article extends NgRestModel
     public function scenarios()
     {
         $scene = parent::scenarios();
-        $scene['restcreate'][] = 'autopost';
+        $scene[self::SCENARIO_RESTCREATE][] = 'autopost';
         return $scene;
     }
     

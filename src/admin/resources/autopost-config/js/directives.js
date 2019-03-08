@@ -62,6 +62,9 @@ zaa.directive("selectOauth", function() {
           else if (n == 'facebook' && n !== o) {
             fbLogin();
           }
+          else if (n == 'account_vk' && n !== o) {
+            $rootScope.$broadcast('showVkFields');
+          }
         });
         $scope.$watch('selectedPageToken', function(n, o) {
           if (n && n !== o) {
@@ -221,11 +224,39 @@ zaa.directive("oauthToken", function() {
                '</div>' +
                '<div class="form-side">' +
                  '<input type="hidden" ng-model="model" name="{{ id }}" id="{{ id }}"/>' +
-                 '<a class="btn" ng-click="renewToken()" ng-show="showRenew == 1">' +
+                 '<a class="btn" ng-click="renewToken()" ng-if="showRenew == 1">' +
                    i18n['js_autopost_config_label_renew_token'] +
                  '</a>' +
                '</div>' +
              '</div>';
     },
   };
+});
+
+zaa.directive("hidableText", function(){
+  return {
+    restrict: "E",
+    scope: {
+      "model": "=",
+      "options": "=",
+      "label": "@label",
+      "i18n": "@i18n",
+      "id": "@fieldid",
+      "placeholder": "@placeholder",
+      "autocomplete" : "@autocomplete",
+      "showEvent": "@showevent",
+    },
+    controller: ['$scope', '$rootScope', function($scope, $rootScope) {
+      $scope.isShown = 0;
+      if (! $scope.showEvent) {
+        $scope.showEvent = 'showHidable';
+      }
+      $rootScope.$on($scope.showEvent, function() {
+        $scope.isShown = 1;
+      });
+    }],
+    template: function() {
+      return '<div ng-if="isShown == 1" class="form-group form-side-by-side" ng-class="{\'input--hide-label\': i18n}"><div class="form-side form-side-label"><label for="{{id}}">{{label}}</label></div><div class="form-side"><input id="{{id}}" insert-paste-listener ng-model="model" type="text" class="form-control" autocomplete="{{autocomplete}}" placeholder="{{placeholder}}" /></div></div>';
+    }
+  }
 });
