@@ -4,6 +4,7 @@ namespace poststests;
 
 use luya\testsuite\fixtures\ActiveRecordFixture;
 use luya\admin\models\Lang;
+use luya\admin\components\AdminUser;
 use luya\posts\models\{Autopost,Article,Cat,AutopostConfig,AutopostQueueJob};
 
 class BaseWebTestCase extends \luya\testsuite\cases\WebApplicationTestCase
@@ -23,6 +24,9 @@ class BaseWebTestCase extends \luya\testsuite\cases\WebApplicationTestCase
     
     public function getConfigArray()
     {
+        $adminUser = $this->createMock(AdminUser::className());
+        $adminUser->method('getId')
+            ->willReturn(1);
         return [
             'id' => 'poststests',
             'basePath' => dirname(__DIR__),
@@ -34,6 +38,7 @@ class BaseWebTestCase extends \luya\testsuite\cases\WebApplicationTestCase
                 'adminLanguage' => [
                     'class' => 'luya\admin\components\AdminLanguage',
                 ],
+                'adminuser' => $adminUser,
                 'urlManager' => [
                     'class' => 'luya\web\UrlManager',
                     'baseUrl' => 'http://localhost/',
@@ -87,6 +92,25 @@ class BaseWebTestCase extends \luya\testsuite\cases\WebApplicationTestCase
                     'timestamp_display_until' => 0,
                     'is_deleted' => 0,
                     'is_display_limit' => 0,
+                    'is_draft' => 0,
+                    'with_autopost' => 0,
+                ],
+                'model2' => [
+                    'id' => 2,
+                    'cat_id' => 1,
+                    'title' => '{"en": "Title 2", "de": ""}',
+                    'teaser_text' => '{"en": "Teaser 2", "de": ""}',
+                    'text' => '{"en": "Text 2", "de": ""}',
+                    'create_user_id' => 0,
+                    'update_user_id' => 0,
+                    'timestamp_create' => 0,
+                    'timestamp_update' => 0,
+                    'timestamp_display_from' => 0,
+                    'timestamp_display_until' => 0,
+                    'is_deleted' => 0,
+                    'is_display_limit' => 0,
+                    'is_draft' => 1,
+                    'with_autopost' => 0,
                 ],
             ],
         ]);

@@ -16,6 +16,8 @@ use luya\posts\models\{AutopostConfig,Autopost};
  * This is the model class for table "posts_article".
  *
  * @property integer $id
+ * @property boolean $is_draft
+ * @property boolean $with_autopost
  * @property string $title
  * @property string $text
  * @property integer $cat_id
@@ -40,8 +42,6 @@ class Article extends NgRestModel
     
     public $i18n = ['title', 'text', 'teaser_text', 'image_list'];
 
-    private $_autopost;
-
     /**
      * @inheritdoc
      */
@@ -58,7 +58,8 @@ class Article extends NgRestModel
         parent::init();
         $this->on(self::EVENT_BEFORE_INSERT, [$this, 'eventBeforeInsert']);
         $this->on(self::EVENT_BEFORE_UPDATE, [$this, 'eventBeforeUpdate']);
-        $this->on(self::EVENT_AFTER_INSERT, [$this, 'eventAfterInsert']);
+        $this->on(self::EVENT_AFTER_INSERT, [$this, 'checkAutopostTrigger']);
+        $this->on(self::EVENT_AFTER_UPDATE, [$this, 'checkAutopostTrigger']);
     }
 
     public function eventBeforeUpdate()
@@ -80,9 +81,12 @@ class Article extends NgRestModel
         }
     }
 
-    public function eventAfterInsert()
+    public function checkAutopostTrigger()
     {
-        if ($this->_autopost) {
+        if ($this->with_autopost && ! $this->is_draft) {
+            if ($this->getAutoposts()->count()) {
+                return;
+            }
             Yii::$app->postsautopost->queuePostJobs($this);
         }
     }
@@ -96,15 +100,15 @@ class Article extends NgRestModel
             [['title', 'text'], 'required'],
             [['title', 'text', 'image_list', 'file_list', 'teaser_text'], 'string'],
             [['cat_id', 'create_user_id', 'update_user_id', 'timestamp_create', 'timestamp_update', 'timestamp_display_from', 'timestamp_display_until'], 'integer'],
-            [['is_deleted', 'is_display_limit'], 'boolean'],
+            [['is_deleted', 'is_display_limit', 'with_autopost', 'is_draft'], 'boolean'],
             [['image_id'], 'safe'],
-            ['autopost', 'validateAutopostTokens', 'skipOnError' => true],
+            ['with_autopost', 'validateAutopostConfigs', 'skipOnError' => true],
         ];
     }
 
-    public function validateAutopostTokens($attribute, $params, $validator)
+    public function validateAutopostConfigs($attribute, $params, $validator)
     {
-        if (! $this->_autopost) {
+        if (! $this->with_autopost) {
             return;
         }
         $autopostConfig = AutopostConfig::find()->all();
@@ -130,7 +134,8 @@ class Article extends NgRestModel
             'is_display_limit' => Module::t('article_is_display_limit'),
             'image_list' => Module::t('article_image_list'),
             'file_list' => Module::t('article_file_list'),
-            'autopost' => Module::t('article_autopost'),
+            'with_autopost' => Module::t('article_autopost'),
+            'is_draft' => Module::t('article_is_draft'),
         ];
     }
     
@@ -145,6 +150,8 @@ class Article extends NgRestModel
             'text' => [
                 'class' => 'luya\posts\admin\plugins\WysiwygPlugin',
             ],
+            'with_autopost' => 'toggleStatus',
+            'is_draft' => 'toggleStatus',
             'image_id' => 'image',
             'timestamp_create' => 'datetime',
             'timestamp_display_from' => 'date',
@@ -156,26 +163,6 @@ class Article extends NgRestModel
         ];
     }
     
-    /**
-     * @inheritdoc
-     */
-    public function ngRestExtraAttributeTypes()
-    {
-        return [
-            'autopost' => 'toggleStatus',
-        ];
-    }
-
-    public function setAutopost($autopost)
-    {
-        $this->_autopost = $autopost;
-    }
-
-    public function getAutopost()
-    {
-        return $this->_autopost;
-    }
-
     /**
      *
      * @return string
@@ -230,22 +217,11 @@ class Article extends NgRestModel
     {
         return [
             [['list'], ['cat_id', 'title', 'timestamp_create', 'image_id']],
-            [['create'], ['cat_id', 'title', 'teaser_text', 'autopost', 'text', /*'timestamp_create', 'timestamp_display_from', 'is_display_limit', 'timestamp_display_until',*/ 'image_id', 'image_list', 'file_list']],
-            [['update'], ['cat_id', 'title', 'teaser_text', 'text', /*'timestamp_create', 'timestamp_display_from', 'is_display_limit', 'timestamp_display_until',*/ 'image_id', 'image_list', 'file_list']],
+            [['create', 'update'], ['cat_id', 'title', 'teaser_text', 'with_autopost', 'is_draft', 'text', /*'timestamp_create', 'timestamp_display_from', 'is_display_limit', 'timestamp_display_until',*/ 'image_id', 'image_list', 'file_list']],
             [['delete'], true],
         ];
     }
 
-    /**
-     * @inheritdoc
-     */
-    public function scenarios()
-    {
-        $scene = parent::scenarios();
-        $scene[self::SCENARIO_RESTCREATE][] = 'autopost';
-        return $scene;
-    }
-    
     /**
      * @inheritdoc
      */
@@ -265,8 +241,9 @@ class Article extends NgRestModel
     public static function getAvailable($limit = false)
     {
         $q = self::find()
-            ->andWhere('timestamp_display_from <= :time', ['time' => time()])
-            ->orderBy('timestamp_display_from DESC');
+           ->andWhere('is_draft = :is_draft', ['is_draft' => false])
+           ->andWhere('timestamp_display_from <= :time', ['time' => time()])
+           ->orderBy('timestamp_display_from DESC');
         
         if ($limit) {
             $q->limit($limit);
@@ -294,6 +271,11 @@ class Article extends NgRestModel
     {
         return $this->hasOne(Cat::class, ['id' => 'cat_id']);
     }
+
+    public function getAutoposts()
+    {
+        return $this->hasMany(Autopost::class, ['article_id' => 'id']);
+    }
     
     /**
      * The cat name short getter.
@@ -303,10 +285,5 @@ class Article extends NgRestModel
     public function getCategoryName()
     {
         return $this->cat->title;
-    }
-
-    public function extraFields()
-    {
-        return ['autopost'];
     }
 }

@@ -132,7 +132,7 @@ zaa
           },
           pollError
         )
-        .then(tick, function() { console.log('Chain rejected') });
+        .then(tick, function() { console.log('Chain rejected'); tick(); });
     }
 
     function tick() {

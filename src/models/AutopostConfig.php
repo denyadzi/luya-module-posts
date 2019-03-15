@@ -103,7 +103,7 @@ class AutopostConfig extends NgRestModel
             'type' => [
                 'selectArray',
                 'data' => [
-                    Autopost::TYPE_FACEBOOK => 'Facebook Page',
+                    //Autopost::TYPE_FACEBOOK => 'Facebook Page',
                     Autopost::TYPE_VK_ACCOUNT => 'Vkontakte Account',
                 ],
             ],

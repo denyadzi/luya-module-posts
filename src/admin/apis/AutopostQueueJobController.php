@@ -4,6 +4,7 @@ namespace luya\posts\admin\apis;
 
 use Yii;
 use yii\helpers\ArrayHelper;
+use yii\data\ActiveDataProvider;
 use yii\web\{ConflictHttpException, NotFoundHttpException, NotAcceptableHttpException, BadRequestHttpException, ServerErrorHttpException};
 use luya\posts\models\{AutopostQueueJob,Autopost};
 use luya\posts\models\dto\AutopostFinishData;
@@ -20,42 +21,19 @@ class AutopostQueueJobController extends \luya\admin\ngrest\base\Api
      */
     public $modelClass = 'luya\posts\models\AutopostQueueJob';
 
-    /**
-     * @inheritdoc
-     */
-    public function actions()
+    
+    public function actionPending()
     {
-        return ArrayHelper::merge(parent::actions(), [
-            'pending' => [
-                'class' => 'luya\admin\ngrest\base\actions\IndexAction',
-                'modelClass' => $this->modelClass,
-                'checkAccess' => [$this, 'checkAccess'],
-                'prepareActiveDataQuery' => [$this, 'preparePendingQuery'],
-                'dataFilter' => $this->getDataFilter(),
-            ],
-        ]);            
-    }
+        $this->checkAccess('filter');
 
-    /**
-     * @inheritdoc
-     */
-    public function checkAccess($action, $model = null, $params = [])
-    {
-        if ($action == 'pending') {
-            $action = 'filter';
-        }
-        parent::checkAccess($action, $model, $params);
-    }
-
-    public function preparePendingQuery()
-    {
-        $modelClass = $this->modelClass;
-        return $modelClass::ngRestFind()
-            ->with($this->getWithRelation('pending'))
+        $query = $this->modelClass::ngRestFind()
             ->andWhere([
                 'timestamp_reserve' => null,
                 'timestamp_finish' => null,
             ]);
+        return new ActiveDataProvider([
+            'query' => $query,
+        ]);
     }
 
     public function actionReserve($id)
@@ -70,6 +48,7 @@ class AutopostQueueJobController extends \luya\admin\ngrest\base\Api
             throw new ConflictHttpException();
         }
         $job->timestamp_reserve = time();
+        $job->timestamp_finish = null;
         if (! $job->save()) {
             throw new ServerErrorHttpException();
         }
