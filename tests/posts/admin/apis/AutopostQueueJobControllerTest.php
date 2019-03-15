@@ -48,7 +48,6 @@ class AutopostQueueJobControllerTest extends \luya\testsuite\cases\NgRestTestCas
             'modules' => [
                 'postsadmin' => [
                     'class' => 'luya\posts\admin\Module',
-                    'encryptStoredTokens' => false,
                 ],
             ],
         ];

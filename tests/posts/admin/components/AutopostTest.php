@@ -4,7 +4,6 @@ namespace luya\posts\tests\admin\components;
 
 use luya\admin\components\AdminLanguage;
 use luya\posts\admin\components\Autopost;
-use luya\posts\admin\jobs\FacebookAutopost;
 use luya\posts\models\{AutopostConfig,AutopostQueueJob};
 use luya\posts\models\Autopost as AutopostModel;
 
@@ -23,14 +22,13 @@ class AutopostTest extends \poststests\BaseWebTestCase
                 'id' => 1,
                 'lang_id' => 1,
                 'type' => 'facebook',
-                'access_token' => '1234',
                 'with_link' => 1,
             ]) ]);
         $comp
             ->expects($this->once())
             ->method('queueJob')
             ->with($this->callback(function($job) {
-                return is_a($job, FacebookAutopost::className());
+                return is_a($job, AutopostQueueJob::className());
             }));
 
         $comp->queuePostJobs($article);
@@ -49,7 +47,6 @@ class AutopostTest extends \poststests\BaseWebTestCase
                 'id' => 1,
                 'lang_id' => 2,
                 'type' => 'facebook',
-                'access_token' => '1234',
                 'with_link' => 1,
             ]) ]);
         $comp
@@ -92,20 +89,20 @@ class AutopostTest extends \poststests\BaseWebTestCase
         $config  = new AutopostConfig([
             'id' => 2,
             'type' => AutopostModel::TYPE_FACEBOOK,
-            'access_token' => '1234',
             'with_link' => 1,
             'lang_id' => 1,
         ]);
 
         $job = $this->invokeMethod($this->app->postsautopost, 'createJob', [$article, $config]);
 
-        $this->assertSame('Teaser 1', $job->message);
-        $this->assertSame('http://localhost/posts/default/detail?id=1&title=title-1', $job->link);
-        $this->assertSame('1234', $job->accessToken);
-        $this->assertEquals(1, $job->articleId);
-        $this->assertEquals(2, $job->configId);
-        $this->assertTrue($job->postLink);
-        $this->assertFalse($job->postMessage);
+        $jobData = $job->job_data;
+        $this->assertSame('Teaser 1', $jobData['message']);
+        $this->assertSame('http://localhost/posts/default/detail?id=1&title=title-1', $jobData['link']);
+        $this->assertSame('facebook', $jobData['type']);
+        $this->assertEquals(1, $jobData['articleId']);
+        $this->assertEquals(2, $jobData['configId']);
+        $this->assertTrue($jobData['postLink']);
+        $this->assertFalse($jobData['postMessage']);
     }
 
     public function testCreateJob_vkAcnt()
@@ -167,7 +164,6 @@ class AutopostTest extends \poststests\BaseWebTestCase
         $config  = new AutopostConfig([
             'id' => 2,
             'type' => AutopostModel::TYPE_FACEBOOK,
-            'access_token' => '1234',
             'with_link' => 0,
             'with_message' => 1,
             'lang_id' => 1,
@@ -175,7 +171,7 @@ class AutopostTest extends \poststests\BaseWebTestCase
 
         $job = $this->invokeMethod($this->app->postsautopost, 'createJob', [$article, $config]);
 
-        $this->assertTrue($job->postMessage);
+        $this->assertTrue($job->job_data['postMessage']);
     }
 
     public function testCreateJob_vkAcntWithMessageFlag()

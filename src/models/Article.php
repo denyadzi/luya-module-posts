@@ -110,37 +110,7 @@ class Article extends NgRestModel
         $autopostConfig = AutopostConfig::find()->all();
         if (empty($autopostConfig)) {
             $validator->addError($this, $attribute, Module::t('article_autopost_no_configs'));
-            return;
         }
-        $valid = true;
-        foreach ($autopostConfig as $config) {
-            if ($config->type == Autopost::TYPE_FACEBOOK) {
-                $curl = curl_init("https://graph.facebook.com/v3.2/me?access_token={$config->access_token}");
-                curl_setopt_array($curl, [
-                    CURLOPT_RETURNTRANSFER => true,
-                    CURLOPT_CONNECTTIMEOUT => 10, // seconds
-                    CURLOPT_TIMEOUT => 15, // seconds
-                ]);
-
-                $result = curl_exec($curl);
-
-                if (false === $result) {
-                    $validator->addError($this, $attribute, Module::t('article_autopost_check_no_response'));
-                    return;
-                }
-
-                $decoded = Json::decode($result);
-                if (isset($decoded['error'])) {
-                    $validator->addError($this, $attribute, Module::t('article_autopost_check_error_response'));
-                    return;
-                }
-                if (! isset($decoded['id'])) {
-                    $validator->addError($this, $attribute, Module::t('article_autopost_check_invalid_token: {id}', ['id' => $config->id]));
-                    return;
-                }
-            }
-        }
-        return $valid;
     }
 
     /**

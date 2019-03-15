@@ -18,7 +18,6 @@ use luya\posts\admin\Module;
  * @property integer $id
  * @property boolean $is_deleted
  * @property string $type
- * @property text $access_token
  * @property int $lang_id
  * @property tinyint $with_link
  * @property tinyint $with_message
@@ -47,43 +46,6 @@ class AutopostConfig extends NgRestModel
     /**
      * @inheritdoc
      */
-    public function init()
-    {
-        parent::init();
-        $this->on(self::EVENT_BEFORE_INSERT, [$this, 'eventBeforeInsert']);
-        $this->on(self::EVENT_BEFORE_UPDATE, [$this, 'eventBeforeUpdate']);
-        $this->on(self::EVENT_AFTER_FIND, [$this, 'eventAfterFind']);
-    }
-
-    public function eventBeforeInsert()
-    {
-        $this->encryptTokenIfNeeded();
-    }
-
-    public function eventBeforeUpdate()
-    {
-        $this->encryptTokenIfNeeded();        
-    }
-
-    private function encryptTokenIfNeeded()
-    {
-        $postsadmin = Yii::$app->getModule('postsadmin');
-        if ($postsadmin->encryptStoredTokens) {
-            $this->access_token = Yii::$app->security->encryptByPassword($this->access_token, $postsadmin->encryptTokensSecret);
-        }
-    }
-
-    public function eventAfterFind()
-    {
-        $postsadmin = Yii::$app->getModule('postsadmin');
-        if ($postsadmin->encryptStoredTokens) {
-            $this->access_token = Yii::$app->security->decryptByPassword($this->access_token, $postsadmin->encryptTokensSecret);
-        }
-    }
-    
-    /**
-     * @inheritdoc
-     */
     public function behaviors()
     {
         return ArrayHelper::merge(parent::behaviors(), [
@@ -103,7 +65,6 @@ class AutopostConfig extends NgRestModel
         return [
             'id' => Module::t('autopost_config_id'),
             'type' => Module::t('autopost_config_type'),
-            'access_token' => Module::t('autopost_config_access_token'),
             'lang_id' => Module::t('autopost_config_lang_id'),
             'with_link' => Module::t('autopost_config_with_link'),
             'with_message' => Module::t('autopost_config_with_message'),
@@ -118,8 +79,6 @@ class AutopostConfig extends NgRestModel
     {
         return [
             [['lang_id', 'type'], 'required'],
-            [['access_token'], 'string'],
-            ['access_token', 'validateAutopostParameters', 'skipOnError' => true],
             [['type'], 'string', 'max' => 32],
             [['with_link', 'with_message', 'is_deleted'], 'boolean'],
             [['with_link', 'with_message', 'is_deleted'], 'default', 'value' => false],
@@ -129,24 +88,12 @@ class AutopostConfig extends NgRestModel
         ];
     }
 
-    public function validateAutopostParameters($attribute, $params, $validator)
-    {
-        $postsadmin = Yii::$app->getModule('postsadmin');
-        if ($this->type == Autopost::TYPE_FACEBOOK && (empty($postsadmin->fbAppId) || empty($postsadmin->fbAppSecret))) {
-            $validator->addError($this, $attribute, Module::t('autopost_config_exception_invalid_type_configuration: {type}', ['type' => $this->type]));
-            return;
-        }
-    }
-
     /**
      * @inheritdoc
      */
     public function ngRestAttributeTypes()
     {
         return [
-            'access_token' => [
-                'class' => 'luya\posts\admin\plugins\OAuthTokenPlugin',
-            ],
             'lang_id' => [
                 'selectModel',
                 'modelClass' => Lang::className(),
@@ -154,7 +101,7 @@ class AutopostConfig extends NgRestModel
                 'valueField' => 'id',
             ],
             'type' => [
-                'class' => 'luya\posts\admin\plugins\SelectOAuthPlugin',
+                'selectArray',
                 'data' => [
                     Autopost::TYPE_FACEBOOK => 'Facebook Page',
                     Autopost::TYPE_VK_ACCOUNT => 'Vkontakte Account',
@@ -190,7 +137,7 @@ class AutopostConfig extends NgRestModel
     {
         return [
             ['list', ['type', 'lang_id', 'with_link', 'with_message']],
-            [['create', 'update'], ['type', 'access_token', 'owner_id', 'lang_id', 'with_link', 'with_message']],
+            [['create', 'update'], ['type', 'owner_id', 'lang_id', 'with_link', 'with_message']],
             ['delete', true],
         ];
     }

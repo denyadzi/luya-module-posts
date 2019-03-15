@@ -42,7 +42,6 @@ class BaseWebTestCase extends \luya\testsuite\cases\WebApplicationTestCase
             'modules' => [
                 'postsadmin' => [
                     'class' => 'luya\posts\admin\Module',
-                    'encryptStoredTokens' => false,
                 ],
             ],
         ];
@@ -118,7 +117,6 @@ class BaseWebTestCase extends \luya\testsuite\cases\WebApplicationTestCase
                     'is_deleted' => 0,
                     'type' => 'facebook',
                     'lang_id' => 1,
-                    'access_token' => '1234',
                     'with_link' => 1,
                 ],
             ],

@@ -3,10 +3,21 @@ zaa
 
     $http.get('/admin/api-posts-socialappsconfig/get').then(function(response) {
       var vkAppId = response.data.vkAppId;
+      var fbAppId = response.data.fbAppId;
       if (vkAppId) {
         window.vkAsyncInit = function() {
           VK.init({
             apiId: vkAppId,
+          });
+        };
+      }
+      if (fbAppId) {
+        window.fbAsyncInit = function() {
+          FB.init({
+            appId            : fbAppId,
+            autoLogAppEvents : true,
+            xfbml            : true,
+            version          : 'v3.2'
           });
         };
       }
@@ -24,6 +35,14 @@ zaa
           el.src = "https://vk.com/js/api/openapi.js?160";
           el.async = true;
           document.getElementById("vk_api_transport").appendChild(el);
+        }
+        if (fbAppId) {
+          var el = document.createElement("script");
+          el.type = "text/javascript";
+          el.src = "https://connect.facebook.net/en_US/sdk.js";
+          el.async = true;
+          el.defer = true;
+          document.getElementsByTagName("body")[0].appendChild(el);
         }
       });
     });
@@ -68,6 +87,30 @@ zaa
               }
             });
           }, 8192);
+        } else if (jobData.type == 'facebook') {
+          FB.login(function(response) {
+            if (response.authResponse) {
+              var params = {};
+              // let user choose page token here, and set access_token param
+              if (jobData.postMessage) {
+                params.message = jobData.message;
+              }
+              if (jobData.postLink) {
+                params.link = jobData.link;
+              }
+              FB.api('/me/feed', 'post', params, function(response) {
+                if (! response || response.error) {
+                  def.reject();
+                } else {
+                  $http.post('/admin/api-posts-autopostqueuejob/'+jobId+'/finish', { responseData: response })
+                    .then(finishSuccess, finishError);
+                  def.resolve();
+                }
+              });
+            } else {
+              console.log('User cancelled login or did not fully authorize.');
+            }
+          });          
         }
       });
       return def.promise;

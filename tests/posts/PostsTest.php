@@ -19,7 +19,6 @@ class PostsTest extends WebApplicationTestCase
 			'modules' => [
 				'postsadmin' => [
                     'class' => 'luya\posts\admin\Module',
-                    'encryptStoredTokens' => false,
                 ],
 			],
 			'components' => [

@@ -16,14 +16,8 @@ final class Module extends \luya\admin\base\Module
 
     public $fbAppId;
 
-    public $fbAppSecret;
-
     public $vkAppId;
 
-    public $encryptStoredTokens = true;
-
-    public $encryptTokensSecret = 'CHANGE ME';
-    
     public $apis = [
         'api-posts-article' => 'luya\posts\admin\apis\ArticleController',
         'api-posts-cat' => 'luya\posts\admin\apis\CatController',
@@ -41,18 +35,6 @@ final class Module extends \luya\admin\base\Module
             ],
         ],
     ];
-
-    /**
-     * @inheritdoc
-     */
-    public function init()
-    {
-        parent::init();
-        $s =& $this->encryptTokensSecret;
-        if ($this->encryptStoredTokens && (empty($s) || 'CHANGE ME' === $s)) {
-            throw new InvalidConfigException('Please, change the `encryptTokensSecret` property value if you need token storage encryption (which is preffered). Otherwise, set `encryptStoredTokens` property to false to disable encryption');
-        }
-    }
 
     /**
      * @inheritdoc
@@ -112,7 +94,7 @@ final class Module extends \luya\admin\base\Module
     public function getJsTranslationMessages()
     {
         return [
-            'js_autopost_config_fb_login_fail', 'js_autopost_config_label_renew_token',
+            'js_autopost_config_fb_login_fail',
         ];
     }
 }

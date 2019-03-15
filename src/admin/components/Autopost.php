@@ -5,7 +5,6 @@ namespace luya\posts\admin\components;
 use Yii;
 use yii\base\InvalidArgumentException;
 use luya\admin\helpers\I18n;
-use luya\posts\admin\jobs\FacebookAutopost;
 use luya\posts\admin\exceptions\NoAutopostMessageException;
 use luya\posts\models\{AutopostConfig,Article,AutopostQueueJob};
 use luya\posts\models\Autopost as AutopostModel;
@@ -42,14 +41,16 @@ class Autopost extends \yii\base\BaseObject
         }
         switch ($config->type) {
         case AutopostModel::TYPE_FACEBOOK:
-            return new FacebookAutopost([
-                'accessToken' => $config->access_token,
-                'articleId' => $article->id,
-                'configId' => $config->id,
-                'message' => $message,
-                'link' => $article->getDetailAbsoluteUrl(),
-                'postLink' => (bool)$config->with_link,
-                'postMessage' => (bool)$config->with_message,
+            return new AutopostQueueJob([
+                'job_data' => [
+                    'type' => AutopostModel::TYPE_FACEBOOK,
+                    'articleId' => $article->id,
+                    'configId' => $config->id,
+                    'message' => $message,
+                    'link' => $article->getDetailAbsoluteUrl(),
+                    'postLink' => (bool)$config->with_link,
+                    'postMessage' => (bool)$config->with_message,
+                ],
             ]);
         case AutopostModel::TYPE_VK_ACCOUNT:
             return new AutopostQueueJob([
@@ -71,10 +72,6 @@ class Autopost extends \yii\base\BaseObject
 
     public function queueJob($job)
     {
-        if (is_a($job, FacebookAutopost::className())) {
-            Yii::$app->adminqueue->push($job);
-        } else {
-            $job->save();
-        }
+        $job->save();
     }
 }
