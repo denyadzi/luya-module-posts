@@ -23,7 +23,6 @@ final class Module extends \luya\admin\base\Module
         'api-posts-cat' => 'luya\posts\admin\apis\CatController',
         'api-posts-autopostconfig' => 'luya\posts\admin\apis\AutopostConfigController',
         'api-posts-wysiwygconfig' => 'luya\posts\admin\apis\WysiwygConfigController',
-        'api-posts-socialappsconfig' => 'luya\posts\admin\apis\SocialAppsConfigController',
         'api-posts-autopostqueuejob' => 'luya\posts\admin\apis\AutopostQueueJobController',
     ];
 

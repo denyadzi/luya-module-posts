@@ -1,53 +1,6 @@
 zaa
   .service('autopostQueueWorker', ['$http', '$timeout', '$q', function($http, $timeout, $q) {
 
-    $http.get('/admin/api-posts-socialappsconfig/get').then(function(response) {
-      var vkAppId = response.data.vkAppId;
-      var fbAppId = response.data.fbAppId;
-      if (vkAppId) {
-        window.vkAsyncInit = function() {
-          VK.init({
-            apiId: vkAppId,
-          });
-        };
-      }
-      if (fbAppId) {
-        window.fbAsyncInit = function() {
-          FB.init({
-            appId            : fbAppId,
-            autoLogAppEvents : true,
-            xfbml            : true,
-            version          : 'v3.2'
-          });
-        };
-      }
-
-      $timeout(function() {
-        if (vkAppId) {
-          // remove when using own template >
-          var vk = document.createElement("div");
-          vk.id = "vk_api_transport";
-          document.getElementsByTagName("body")[0].appendChild(vk);
-          //<
-          
-          var el = document.createElement("script");
-          el.type = "text/javascript";
-          el.src = "https://vk.com/js/api/openapi.js?160";
-          el.async = true;
-          document.getElementById("vk_api_transport").appendChild(el);
-        }
-        if (fbAppId) {
-          var el = document.createElement("script");
-          el.type = "text/javascript";
-          el.src = "https://connect.facebook.net/en_US/sdk.js";
-          el.async = true;
-          el.defer = true;
-          document.getElementsByTagName("body")[0].appendChild(el);
-        }
-      });
-    });
-
-    
     function pollError(response) {
       console.log('Poll Error', response);
     }
@@ -143,6 +96,54 @@ zaa
       tick();
     }
   }])
-  .run(['autopostQueueWorker', function(autopostQueueWorker) {
-    autopostQueueWorker.run();
+  .run(['autopostQueueWorker', '$timeout', '$http', function(autopostQueueWorker, $timeout, $http) {
+    $http.get('/admin/api-posts-autopostqueuejob/worker-data').then(function(response) {
+      if (! response.data.enabled) {
+        return;
+      }
+      var vkAppId = response.data.vkAppId;
+      var fbAppId = response.data.fbAppId;
+      if (vkAppId) {
+        window.vkAsyncInit = function() {
+          VK.init({
+            apiId: vkAppId,
+          });
+        };
+      }
+      if (fbAppId) {
+        window.fbAsyncInit = function() {
+          FB.init({
+            appId            : fbAppId,
+            autoLogAppEvents : true,
+            xfbml            : true,
+            version          : 'v3.2'
+          });
+        };
+      }
+
+      $timeout(function() {
+        if (vkAppId) {
+          // remove when using own template >
+          var vk = document.createElement("div");
+          vk.id = "vk_api_transport";
+          document.getElementsByTagName("body")[0].appendChild(vk);
+          //<
+          
+          var el = document.createElement("script");
+          el.type = "text/javascript";
+          el.src = "https://vk.com/js/api/openapi.js?160";
+          el.async = true;
+          document.getElementById("vk_api_transport").appendChild(el);
+        }
+        if (fbAppId) {
+          var el = document.createElement("script");
+          el.type = "text/javascript";
+          el.src = "https://connect.facebook.net/en_US/sdk.js";
+          el.async = true;
+          el.defer = true;
+          document.getElementsByTagName("body")[0].appendChild(el);
+        }
+        autopostQueueWorker.run();
+      });
+    });
   }]);

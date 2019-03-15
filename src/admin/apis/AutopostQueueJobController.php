@@ -5,7 +5,7 @@ namespace luya\posts\admin\apis;
 use Yii;
 use yii\helpers\ArrayHelper;
 use yii\data\ActiveDataProvider;
-use yii\web\{ConflictHttpException, NotFoundHttpException, NotAcceptableHttpException, BadRequestHttpException, ServerErrorHttpException};
+use yii\web\{ConflictHttpException, NotFoundHttpException, NotAcceptableHttpException, BadRequestHttpException, ServerErrorHttpException,ForbiddenHttpException};
 use luya\posts\models\{AutopostQueueJob,Autopost};
 use luya\posts\models\dto\AutopostFinishData;
 
@@ -95,4 +95,20 @@ class AutopostQueueJobController extends \luya\admin\ngrest\base\Api
             throw new BadRequestHttpException();
         }
     }
+
+    public function actionWorkerData() {
+        $mod = \Yii::$app->getModule('postsadmin');
+        $enabled = true;
+        try {
+            $this->checkAccess('filter');
+        } catch (ForbiddenHttpException $e) {
+            $enabled = false;
+        }
+        return [
+            'enabled' => $enabled,
+            'fbAppId' => $mod->fbAppId,
+            'vkAppId' => $mod->vkAppId,
+        ];
+    }
+    
 }
