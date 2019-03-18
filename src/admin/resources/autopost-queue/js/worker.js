@@ -89,7 +89,7 @@ zaa
     }
 
     function tick() {
-      $timeout(pollQueue, 10000);
+      $timeout(pollQueue, 3000);
     }
     
     this.run = function() {
