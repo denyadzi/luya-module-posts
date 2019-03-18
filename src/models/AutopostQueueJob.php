@@ -6,6 +6,7 @@ use Yii;
 use yii\helpers\ArrayHelper;
 use luya\admin\ngrest\base\NgRestModel;
 use luya\posts\admin\Module;
+use luya\posts\admin\jobs\ResetAutopostReserve;
 use luya\posts\traits\JsonAttributesTrait;
 
 /**
@@ -38,6 +39,20 @@ class AutopostQueueJob extends NgRestModel
     public static function ngRestApiEndpoint()
     {
         return 'api-posts-autopostqueuejob';
+    }
+
+    public function init()
+    {
+        parent::init();
+        $this->on(self::EVENT_AFTER_INSERT, [$this, 'queueResetReserveJob']);
+        $this->on(self::EVENT_AFTER_UPDATE, [$this, 'queueResetReserveJob']);
+    }
+
+    public function queueResetReserveJob()
+    {
+        if ($this->timestamp_reserve && ! $this->timestamp_finish) {
+            Yii::$app->adminqueue->delay(3 * 60)->push(new ResetAutopostReserve(['autopostJobId' => $this->id]));
+        }
     }
 
     /**

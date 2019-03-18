@@ -4,20 +4,20 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "5a06167b540e6318ac51457b373f3519",
+    "content-hash": "b20dc2bc4c3aff8cd06292edebb78d05",
     "packages": [
         {
             "name": "bower-asset/angular",
-            "version": "v1.7.7",
+            "version": "v1.7.8",
             "source": {
                 "type": "git",
                 "url": "https://github.com/angular/bower-angular.git",
-                "reference": "b333e148cf509428fd54f53c41710c4e8cf1ac2b"
+                "reference": "56690b5e545ad36d04e369a65171de1adbe3ce64"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/angular/bower-angular/zipball/b333e148cf509428fd54f53c41710c4e8cf1ac2b",
-                "reference": "b333e148cf509428fd54f53c41710c4e8cf1ac2b",
+                "url": "https://api.github.com/repos/angular/bower-angular/zipball/56690b5e545ad36d04e369a65171de1adbe3ce64",
+                "reference": "56690b5e545ad36d04e369a65171de1adbe3ce64",
                 "shasum": ""
             },
             "type": "bower-asset-library",
@@ -28,7 +28,7 @@
             "license": [
                 "MIT"
             ],
-            "time": "2019-02-04T13:17:50+00:00"
+            "time": "2019-03-11T11:40:48+00:00"
         },
         {
             "name": "bower-asset/angular-ui-tinymce",
@@ -484,12 +484,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/luyadev/luya-module-admin.git",
-                "reference": "6ec4b2095bd4129f55dc32468462175a1df1460f"
+                "reference": "54c652778fb121b5080d8a3ca6effa646160fc59"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/luyadev/luya-module-admin/zipball/6ec4b2095bd4129f55dc32468462175a1df1460f",
-                "reference": "6ec4b2095bd4129f55dc32468462175a1df1460f",
+                "url": "https://api.github.com/repos/luyadev/luya-module-admin/zipball/54c652778fb121b5080d8a3ca6effa646160fc59",
+                "reference": "54c652778fb121b5080d8a3ca6effa646160fc59",
                 "shasum": ""
             },
             "require": {
@@ -556,7 +556,7 @@
                 "yii",
                 "yii2"
             ],
-            "time": "2019-02-27T14:47:37+00:00"
+            "time": "2019-03-05T20:47:35+00:00"
         },
         {
             "name": "symfony/process",
@@ -2599,16 +2599,16 @@
         },
         {
             "name": "twig/twig",
-            "version": "v1.37.1",
+            "version": "v1.38.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/twigphp/Twig.git",
-                "reference": "66be9366c76cbf23e82e7171d47cbfa54a057a62"
+                "reference": "874adbd9222f928f6998732b25b01b41dff15b0c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/twigphp/Twig/zipball/66be9366c76cbf23e82e7171d47cbfa54a057a62",
-                "reference": "66be9366c76cbf23e82e7171d47cbfa54a057a62",
+                "url": "https://api.github.com/repos/twigphp/Twig/zipball/874adbd9222f928f6998732b25b01b41dff15b0c",
+                "reference": "874adbd9222f928f6998732b25b01b41dff15b0c",
                 "shasum": ""
             },
             "require": {
@@ -2623,7 +2623,7 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "1.37-dev"
+                    "dev-master": "1.38-dev"
                 }
             },
             "autoload": {
@@ -2661,7 +2661,7 @@
             "keywords": [
                 "templating"
             ],
-            "time": "2019-01-14T14:59:29+00:00"
+            "time": "2019-03-12T18:45:24+00:00"
         },
         {
             "name": "webmozart/assert",

@@ -101,9 +101,9 @@ class AutopostConfig extends NgRestModel
                 'valueField' => 'id',
             ],
             'type' => [
-                'selectArray',
+                'class' => 'luya\posts\admin\plugins\SelectOAuthPlugin',
                 'data' => [
-                    //Autopost::TYPE_FACEBOOK => 'Facebook Page',
+                    Autopost::TYPE_FACEBOOK => 'Facebook Page',
                     Autopost::TYPE_VK_ACCOUNT => 'Vkontakte Account',
                 ],
             ],
