@@ -20,7 +20,7 @@ class ResetAutopostReserve extends \yii\base\BaseObject implements \yii\queue\Jo
             throw new ResetAutopostReserveException("Job with `id={$this->autopostJobId}` not found");
         }
         if (! $job->timestamp_reserve || $job->timestamp_finish) {
-            throw new ResetAutopostReserveException("Job to reset shoud be reserved and not finished `id={$this->autopostJobId}`");
+            return;
         }
 
         $job->timestamp_reserve = null;
