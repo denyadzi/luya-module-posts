@@ -150,6 +150,8 @@ class BaseWebTestCase extends \luya\testsuite\cases\WebApplicationTestCase
             'fixtureData' => [
                 'model1' => [
                     'id' => 1,
+                    'article_id' => 1,
+                    'config_id' => 1,
                     'job_data' => '{}',
                 ],
             ],

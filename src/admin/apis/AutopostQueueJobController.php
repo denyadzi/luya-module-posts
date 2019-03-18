@@ -26,11 +26,7 @@ class AutopostQueueJobController extends \luya\admin\ngrest\base\Api
     {
         $this->checkAccess('filter');
 
-        $query = $this->modelClass::ngRestFind()
-            ->andWhere([
-                'timestamp_reserve' => null,
-                'timestamp_finish' => null,
-            ]);
+        $query = $this->modelClass::ngRestFind()->pending();
         return new ActiveDataProvider([
             'query' => $query,
         ]);

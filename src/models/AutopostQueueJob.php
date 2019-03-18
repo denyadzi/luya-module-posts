@@ -8,6 +8,7 @@ use luya\admin\ngrest\base\NgRestModel;
 use luya\posts\admin\Module;
 use luya\posts\admin\jobs\ResetAutopostReserve;
 use luya\posts\traits\JsonAttributesTrait;
+use luya\posts\models\{Article,AutopostConfig,AutopostQueueJobQuery};
 
 /**
  * Autopost Queue Job.
@@ -15,6 +16,8 @@ use luya\posts\traits\JsonAttributesTrait;
  * File has been created with `crud/create` command. 
  *
  * @property integer $id
+ * @property integer $article_id
+ * @property integer $config_id
  * @property text $job_data
  * @property integer $timestamp_reserve
  * @property integer $timestamp_finish
@@ -41,6 +44,22 @@ class AutopostQueueJob extends NgRestModel
         return 'api-posts-autopostqueuejob';
     }
 
+    /**
+     * @inheritdoc
+     */
+    public static function find()
+    {
+        return new AutopostQueueJobQuery(get_called_class());
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public static function ngRestFind()
+    {
+        return new AutopostQueueJobQuery(get_called_class());
+    }
+    
     public function init()
     {
         parent::init();
@@ -88,6 +107,8 @@ class AutopostQueueJob extends NgRestModel
     {
         return [
             'id' => Module::t('autopost_queue_job_id'),
+            'article_id' => Module::t('autopost_queue_job_article_id'),
+            'config_id' => Module::t('autopost_queue_job_config_id'),
             'job_data' => Module::t('autopost_queue_job_data'),
             'timestamp_finish' => Module::t('autopost_queue_job_timestamp_finish'),
             'timestamp_reserve' => Module::t('autopost_queue_job_timestamp_reserve'),
@@ -104,8 +125,9 @@ class AutopostQueueJob extends NgRestModel
         return [
             [['job_data'], 'required'],
             [['job_data'], 'string'],
-            [['timestamp_finish', 'timestamp_reserve'], 'integer'],
-        ];
+            [['timestamp_finish', 'timestamp_reserve', 'article_id', 'config_id'], 'integer'],
+            [['article_id'], 'exist', 'skipOnError' => true, 'targetClass' => Article::className(), 'targetAttribute' => ['article_id' => 'id']],
+            [['config_id'], 'exist', 'skipOnError' => true, 'targetClass' => AutopostConfig::className(), 'targetAttribute' => ['config_id' => 'id']],        ];
     }
 
     /**
@@ -115,6 +137,8 @@ class AutopostQueueJob extends NgRestModel
     {
         return [
             'job_data' => 'hidden',
+            'article_id' => 'number',
+            'config_id' => 'number',
             'timestamp_finish' => 'number',
             'timestamp_create' => 'hidden',
             'timestamp_update' => 'hidden',

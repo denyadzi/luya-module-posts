@@ -12,6 +12,8 @@ class AutopostQueueJobControllerTest extends \luya\testsuite\cases\NgRestTestCas
     public $apiClass = 'luya\posts\admin\apis\AutopostQueueJobController';
     public $modelSchema = [
         'job_data' => 'text',
+        'article_id' => 'int(11)',
+        'config_id' => 'int(11)',
         'timestamp_reserve' => 'int(11)',
         'timestamp_finish' => 'int(11)',
         'timestamp_create' => 'int(11)',
@@ -20,24 +22,32 @@ class AutopostQueueJobControllerTest extends \luya\testsuite\cases\NgRestTestCas
     public $modelFixtureData = [
         'model1' => [
             'id' => 1,
+            'article_id' => 1,
+            'config_id' => 1,
             'job_data' => '{"type": "facebook", "message": "Hello World", "link": "http://localhost/article/1", "articleId": 1, "configId": 1, "postLink": 1, "postMessage": 0}',
             'timestamp_reserve' => null,
             'timestamp_finish' => null,
         ],
         'model2' => [
             'id' => 2,
+            'article_id' => 1,
+            'config_id' => 1,
             'job_data' => '{"type": "facebook", "message": "Hello World", "link": "http://localhost/article/1", "articleId": 1, "configId": 1, "postLink": 1, "postMessage": 0}',
             'timestamp_reserve' => null,
             'timestamp_finish' => null,
         ],
         'model3' => [
             'id' => 3,
+            'article_id' => 1,
+            'config_id' => 1,
             'job_data' => '{"type": "facebook", "message": "Hello World", "link": "http://localhost/article/1", "articleId": 1, "configId": 1, "postLink": 1, "postMessage": 0}',
             'timestamp_reserve' => 1552024475,
             'timestamp_finish' => 1552024479,
         ],
         'model4' => [
             'id' => 4,
+            'article_id' => 1,
+            'config_id' => 1,
             'job_data' => '{"type": "facebook", "message": "Hello World", "link": "http://localhost/article/1", "articleId": 1, "configId": 1, "postLink": 1, "postMessage": 0}',
             'timestamp_reserve' => 1552024475,
             'timestamp_finish' => null,
@@ -188,6 +198,7 @@ class AutopostQueueJobControllerTest extends \luya\testsuite\cases\NgRestTestCas
 
     public function testActionReserve_existingNonReserved_success()
     {
+        $this->getAdminQueueMock();
         $this->setPermission(0, 1);
 
         $ret = $this->api->actionReserve(1);
@@ -196,6 +207,14 @@ class AutopostQueueJobControllerTest extends \luya\testsuite\cases\NgRestTestCas
         $this->assertEquals(1, $ret['id']);
         $this->assertFalse(empty($model->timestamp_reserve));
         $this->assertTrue(empty($model->timestamp_finish));
+    }
+
+    private function getAdminQueueMock()
+    {
+        $mock = $this->createMock('\yii\queue\db\Queue');
+        $mock->method('delay')->willReturn($mock);
+        $this->app->set('adminqueue', $mock);
+        return $mock;
     }
 
     /**

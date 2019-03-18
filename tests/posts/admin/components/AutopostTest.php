@@ -19,7 +19,7 @@ class AutopostTest extends \poststests\BaseWebTestCase
             ->expects($this->once())
             ->method('loadConfigs')
             ->willReturn([ new AutopostConfig([
-                'id' => 1,
+                'id' => 2,
                 'lang_id' => 1,
                 'type' => 'facebook',
                 'with_link' => 1,
@@ -66,7 +66,7 @@ class AutopostTest extends \poststests\BaseWebTestCase
             ->expects($this->once())
             ->method('loadConfigs')
             ->willReturn([ new AutopostConfig([
-                'id' => 1,
+                'id' => 2,
                 'lang_id' => 1,
                 'type' => 'account_vk',
                 'owner_id' => '1234',

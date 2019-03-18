@@ -5,11 +5,12 @@ namespace luya\posts\models;
 use Yii;
 use yii\helpers\{Inflector,Json};
 use luya\helpers\Url;
-use luya\posts\admin\Module;
+use luya\admin\helpers\I18n;
 use luya\admin\aws\TaggableActiveWindow;
 use luya\admin\ngrest\base\NgRestModel;
 use luya\admin\traits\SoftDeleteTrait;
 use luya\admin\traits\TaggableTrait;
+use luya\posts\admin\Module;
 use luya\posts\models\{AutopostConfig,Autopost};
 
 /**
@@ -178,6 +179,14 @@ class Article extends NgRestModel
     public function getDetailAbsoluteUrl()
     {
         return Url::toRoute(['/posts/default/detail', 'id' => $this->id, 'title' => Inflector::slug($this->title)], true);
+    }
+
+    /**
+     * @return string 
+     */
+    public function getDetailI18nAbsoluteUrl($lang = null)
+    {
+        return Url::toRoute(['/posts/default/detail', 'id' => $this->id, 'title' => Inflector::slug(I18n::decodeFindActive($this->title, '', $lang))], true);
     }
 
 
