@@ -164,3 +164,52 @@ zaa.directive("hidableText", function(){
     }
   }
 });
+
+    /**
+     * options = {'true-value' : 1, 'false-value' : 0};
+     */
+    zaa.directive("tempCheckbox", function() {
+        return {
+            restrict: "E",
+            scope: {
+                "model": "=",
+                "options": "=",
+                "i18n": "@i18n",
+                "id": "@fieldid",
+                "label": "@label",
+                "initvalue": "@initvalue"
+            },
+            controller: ['$scope', '$timeout', function($scope, $timeout) {
+                if ($scope.options === null || $scope.options === undefined) {
+                    $scope.valueTrue = 1;
+                    $scope.valueFalse = 0;
+                } else {
+                    $scope.valueTrue = $scope.options['true-value'];
+                    $scope.valueFalse = $scope.options['false-value'];
+                }
+
+                $scope.init = function() {
+            		if ($scope.model == undefined && $scope.model == null) {
+            		  $scope.model = typeCastValue($scope.initvalue);
+            		}
+                };
+                $timeout(function() {
+                	$scope.init();
+            	})
+            }],
+            template: function() {
+                return  '<div class="form-group form-side-by-side" ng-class="{\'input--hide-label\': i18n}">' +
+                            '<div class="form-side form-side-label">' +
+                                '<label for="{{id}}">{{label}}</label>' +
+                            '</div>' +
+                            '<div class="form-side">' +
+                                '<div class="form-check">' +
+                                    '<input id="{{id}}" ng-true-value="{{valueTrue}}" ng-false-value="{{valueFalse}}" ng-model="model" type="checkbox" class="form-check-input-standalone" ng-checked="model == valueTrue"/>' +
+                                    '<label for="{{id}}"></label>' +
+                                '</div>' +
+                            '</div>' +
+                        '</div>';
+            }
+        }
+    });
+

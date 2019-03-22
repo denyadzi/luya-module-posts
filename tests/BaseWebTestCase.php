@@ -93,7 +93,7 @@ class BaseWebTestCase extends \luya\testsuite\cases\WebApplicationTestCase
                     'is_deleted' => 0,
                     'is_display_limit' => 0,
                     'is_draft' => 0,
-                    'with_autopost' => 0,
+                    'with_autopost' => 1,
                 ],
                 'model2' => [
                     'id' => 2,

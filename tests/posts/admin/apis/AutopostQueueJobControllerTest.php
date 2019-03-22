@@ -65,19 +65,6 @@ class AutopostQueueJobControllerTest extends \luya\testsuite\cases\NgRestTestCas
         return [
             'id' => 'queuejobtest',
             'basePath' => dirname(__DIR__),
-            'components' => [
-                'db' => [
-                    'class' => 'yii\db\Connection',
-                    'dsn' => 'sqlite::memory:',
-                ],
-                'adminLanguage' => [
-                    'class' => 'luya\admin\components\AdminLanguage',
-                ],
-                'urlManager' => [
-                    'class' => 'luya\web\UrlManager',
-                    'baseUrl' => 'http://localhost/',
-                ],
-            ],
             'modules' => [
                 'postsadmin' => [
                     'class' => 'luya\posts\admin\Module',
@@ -89,31 +76,6 @@ class AutopostQueueJobControllerTest extends \luya\testsuite\cases\NgRestTestCas
     public function afterSetup()
     {
         parent::afterSetup();
-        $this->app->db->createCommand()->insert('admin_group', [
-            'id' => 1,
-            'name' => 'tester',
-        ])->execute();
-        $this->app->db->createCommand()->insert('admin_auth', [
-            'id' => 1,
-            'alias_name' => 'autopost_queue_job',
-            'module_name' => 'postsadmin',
-            'is_crud' => 1,
-            'route' => 0,
-            'api' => 'api-posts-autopostqueuejob',
-        ])->execute();
-        $this->app->db->createCommand()->insert('admin_group_auth', [
-            'group_id' => 1,
-            'auth_id' => 1,
-            'crud_create' => 0,
-            'crud_update' => 0,
-            'crud_delete' => 0,
-        ])->execute();
-        $this->app->db->createCommand()->insert('admin_user_group', [
-            'user_id' => 1,
-            'group_id' => 1,
-        ])->execute();
-        // without this the api's id is `api`, so permissions aren't applied
-        $this->api->id = 'api-posts-autopostqueuejob';
 
         $this->autopostFixture = new ActiveRecordFixture([
             'modelClass' => Autopost::className(),
@@ -163,27 +125,9 @@ class AutopostQueueJobControllerTest extends \luya\testsuite\cases\NgRestTestCas
         ]);
     }
 
-    public function setPermission($create = 0, $update = 0, $delete = 0)
-    {
-        $this->app->db->createCommand()->update('admin_group_auth',
-                                                [
-                                                    'crud_create' => $create,
-                                                    'crud_update' => $update,
-                                                    'crud_delete' => $delete,
-                                                ],
-                                                [
-                                                    'group_id' => 1,
-                                                    'auth_id' => 1,
-                                                ])->execute();
-    }
-
     public function beforeTearDown()
     {
         parent::beforeTearDown();
-        $this->app->db->createCommand()->delete('admin_group')->execute();
-        $this->app->db->createCommand()->delete('admin_auth')->execute();
-        $this->app->db->createCommand()->delete('admin_group_auth')->execute();
-        $this->app->db->createCommand()->delete('admin_user_group')->execute();
         $this->autopostFixture->cleanup();
         $this->autopostConfigFixture->cleanup();
         $this->articleFixture->cleanup();
@@ -199,7 +143,7 @@ class AutopostQueueJobControllerTest extends \luya\testsuite\cases\NgRestTestCas
     public function testActionReserve_existingNonReserved_success()
     {
         $this->getAdminQueueMock();
-        $this->setPermission(0, 1);
+        $this->apiCanUpdate();
 
         $ret = $this->api->actionReserve(1);
 
@@ -222,7 +166,7 @@ class AutopostQueueJobControllerTest extends \luya\testsuite\cases\NgRestTestCas
      */
     public function testActionReserve_nonExisting()
     {
-        $this->setPermission(0, 1);
+        $this->apiCanUpdate();
 
         $ret = $this->api->actionReserve(10);
     }
@@ -232,7 +176,7 @@ class AutopostQueueJobControllerTest extends \luya\testsuite\cases\NgRestTestCas
      */
     public function testActionReserve_existingFinished()
     {
-        $this->setPermission(0, 1);
+        $this->apiCanUpdate();
 
         $ret = $this->api->actionReserve(3);
     }
@@ -242,7 +186,7 @@ class AutopostQueueJobControllerTest extends \luya\testsuite\cases\NgRestTestCas
      */
     public function testActionReserve_existingReserved()
     {
-        $this->setPermission(0, 1);
+        $this->apiCanUpdate();
 
         $ret = $this->api->actionReserve(4);
     }
@@ -252,8 +196,8 @@ class AutopostQueueJobControllerTest extends \luya\testsuite\cases\NgRestTestCas
         $this->app->request->bodyParams = [
             'responseData' => ['id' => 1234],
         ];
-        $this->setPermission(0, 1);
-
+        $this->apiCanUpdate();
+        
         $ret = $this->api->actionFinish(4);
 
         $model = $this->modelFixture->getModel('model4');

@@ -98,6 +98,18 @@ class ArticleTest extends \poststests\BaseWebTestCase
         $nonDraft->save();
     }
 
+    public function testCheckAutopostTrigger_updateWithoutAutopostsHavingJobPlanned_jobRemoved()
+    {
+        $autopost = $this->createMock(Autopost::className());
+        $this->app->set('postsautopost', $autopost);
+        $withJob = $this->articleFixture->getModel('model1');
+        $withJob->with_autopost = false;
+        $withJob->save();
+
+        $job = $this->autopostQueueFixture->getModel('model1');
+        $this->assertNull($job);
+    }
+    
     public function testValidate_withAutopostHavingConfigs_true()
     {
         $model = $this->articleFixture->getModel('model1');

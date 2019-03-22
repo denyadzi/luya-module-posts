@@ -39,6 +39,7 @@ return [
 // 2.1.0
 
     'article_autopost' => 'Автопубликация',
+    'article_is_draft' => 'Черновик',
     'article_autopost_no_configs' => 'Не найдено сконфигурированных автопубликаций. Пожалуйста, создайте новую конфигурацию или не используйте функцию автопубликации сняв галочку Автопубликации',
     'autopost_config' => 'Конфигурации автопубликаций',
     'autopost_config_id' => 'ID',
@@ -48,4 +49,11 @@ return [
     'autopost_config_with_message' => 'Публиковать с сообщением',
     'autopost_config_owner_id' => 'ID владельца',
     'js_autopost_config_fb_login_fail' => 'Ошибка авторизации в Facebook. Пожалуйста, повторите попытку',
+    'autopost_queue_job' => 'Очередь на автопубликацию',
+    'autopost_queue_job_id' => 'ID',
+    'autopost_queue_job_data' => 'Данные задачи',
+    'autopost_queue_job_timestamp_finish' => 'Выполнено',
+    'autopost_queue_job_timestamp_reserve' => 'Зарезервировано',
+    'autopost_queue_job_timestamp_create' => 'Создано',
+    'autopost_queue_job_timestamp_update' => 'Обновлено',
 ];

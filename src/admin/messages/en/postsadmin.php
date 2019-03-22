@@ -33,6 +33,7 @@ return [
 // 2.1.0
 
     'article_autopost' => 'Autopost',
+    'article_is_draft' => 'Draft',
     'article_autopost_no_configs' => 'No autopost configuration found. Please, create one or don\'t use the autopost function by unsetting the autopost flag',
     'autopost_config' => 'Autopost config',
     'autopost_config_id' => 'ID',

@@ -11,7 +11,7 @@ use luya\admin\ngrest\base\NgRestModel;
 use luya\admin\traits\SoftDeleteTrait;
 use luya\admin\traits\TaggableTrait;
 use luya\posts\admin\Module;
-use luya\posts\models\{AutopostConfig,Autopost};
+use luya\posts\models\{AutopostConfig,Autopost,AutopostQueueJob};
 
 /**
  * This is the model class for table "posts_article".
@@ -89,6 +89,10 @@ class Article extends NgRestModel
                 return;
             }
             Yii::$app->postsautopost->queuePostJobs($this);
+        } else if (! $this->with_autopost) {
+            foreach (AutopostQueueJob::find()->pending()->forArticle($this->id)->all() as $job) {
+                $job->delete();
+            }
         }
     }
 
@@ -102,6 +106,7 @@ class Article extends NgRestModel
             [['title', 'text', 'image_list', 'file_list', 'teaser_text'], 'string'],
             [['cat_id', 'create_user_id', 'update_user_id', 'timestamp_create', 'timestamp_update', 'timestamp_display_from', 'timestamp_display_until'], 'integer'],
             [['is_deleted', 'is_display_limit', 'with_autopost', 'is_draft'], 'boolean'],
+            [['is_draft'], 'default', 'value' => true],
             [['image_id'], 'safe'],
             ['with_autopost', 'validateAutopostConfigs', 'skipOnError' => true],
         ];
@@ -151,8 +156,17 @@ class Article extends NgRestModel
             'text' => [
                 'class' => 'luya\posts\admin\plugins\WysiwygPlugin',
             ],
-            'with_autopost' => 'toggleStatus',
-            'is_draft' => 'toggleStatus',
+            'with_autopost' => [
+                'class' => 'luya\posts\admin\plugins\ToggleStatus',
+                'interactive' => false,
+            ],
+            'is_draft' => [
+                'class' => 'luya\posts\admin\plugins\ToggleStatus',
+                'initValue' => 1,
+                'interactive' => false,
+                'falseIcon' => '',
+                'trueIcon' => 'edit',
+            ],
             'image_id' => 'image',
             'timestamp_create' => 'datetime',
             'timestamp_display_from' => 'date',
