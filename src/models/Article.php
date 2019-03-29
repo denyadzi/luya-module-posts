@@ -205,6 +205,7 @@ class Article extends NgRestModel
             'class' => \luya\web\Composition::class,
             'hidden' => $appComposition->hidden,
             'hideDefaultPrefixOnly' => $appComposition->hideDefaultPrefixOnly,
+            'default' => $appComposition->default,
         ]);
         $composition['langShortCode'] = $lang;
         $slug = Inflector::slug(I18n::decodeFindActive($this->title, '', $lang));
