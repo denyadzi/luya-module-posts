@@ -128,4 +128,14 @@ class ArticleTest extends \poststests\BaseWebTestCase
         $this->assertFalse($model->validate());
         $this->assertNotNull($model->errors['with_autopost']);
     }
+
+    public function testGetDetailI18nAbsoluteUrl()
+    {
+        $this->app->request->hostInfo = 'http://localhost';
+        $article = $this->articleFixture->getModel('model1');
+
+        $url = $article->getDetailI18nAbsoluteUrl('de');
+
+        $this->assertSame('http://localhost/de/posts/1/title-1', $url);
+    }
 }

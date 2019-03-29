@@ -41,7 +41,10 @@ class BaseWebTestCase extends \luya\testsuite\cases\WebApplicationTestCase
                 'adminuser' => $adminUser,
                 'urlManager' => [
                     'class' => 'luya\web\UrlManager',
-                    'baseUrl' => 'http://localhost/',
+                ],
+                'composition' => [
+                    'class' => 'luya\web\Composition',
+                    'hidden' => false,
                 ],
             ],
             'modules' => [

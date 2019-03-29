@@ -199,7 +199,17 @@ class Article extends NgRestModel
      */
     public function getDetailI18nAbsoluteUrl($lang = null)
     {
-        return Url::toRoute(['/posts/default/detail', 'id' => $this->id, 'title' => Inflector::slug(I18n::decodeFindActive($this->title, '', $lang))], true);
+        $urlManager = Yii::$app->urlManager;
+        $appComposition = Yii::$app->composition;
+        $composition = Yii::createObject([
+            'class' => \luya\web\Composition::class,
+            'hidden' => $appComposition->hidden,
+            'hideDefaultPrefixOnly' => $appComposition->hideDefaultPrefixOnly,
+        ]);
+        $composition['langShortCode'] = $lang;
+        $slug = Inflector::slug(I18n::decodeFindActive($this->title, '', $lang));
+        $path = $urlManager->internalCreateUrl(['/posts/default/detail', 'id' => $this->id, 'title' => $slug], $composition);
+        return Url::to($path, true);
     }
 
 
