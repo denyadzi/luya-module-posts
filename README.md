@@ -13,7 +13,7 @@ This module is a fork of the [luya news module](https://github.com/luyadev/luya-
 
 ## Stability
 
-The module is under development, so no stable version is currently available yet
+**The module is under development**, so no stable version is currently available yet
 
 ## Installation
 
@@ -22,6 +22,8 @@ For the installation of modules Composer is required.
 ```sh
 composer require denyadzi/luya-module-posts: ~2.0-dev
 ```
+
+For multilingual posts, the php *intl* extention is highly recommended to be installed in your system
 
 ### Configuration
 
@@ -34,7 +36,17 @@ After installation via Composer include the module to your configuration file wi
     	'class' => 'luya\posts\frontend\Module',
     	'useAppViewPath' => false, // When enabled the views will be looked up in the @app/views folder, otherwise the views shipped with the module will be used.
     ],
-    'postsadmin' => 'luya\posts\admin\Module',
+    'postsadmin' => [
+        'class' => 'luya\posts\admin\Module',
+        'vkAppId' => 1234, /* optional. Needed for Vkontakte autoposts */
+        'fbAppId' => 1234, /* optional. Needed for Facebook autoposts */
+        'wysiwygOptions' => [ /* various tinymce editor options */
+            'height' => '480',
+            'menubar' => false,
+            'plugins' => 'link image code lists textcolor',
+            'toolbar' => 'undo redo | bold underline italic forecolor backcolor image | alignleft aligncenter alignright alignjustify | numlist bullist outdent indent | removeformat | code'
+        ],
+    ],
 ]
 ```
 
@@ -98,7 +110,3 @@ use yii\widgets\LinkPager;
 
 The above examples will just dump all the data from the model active records.
 
-## TODO
-
-* Test token encryption  
-* Document  
