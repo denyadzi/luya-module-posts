@@ -1,6 +1,8 @@
 zaa
   .service('autopostQueueWorker', ['$http', '$timeout', '$q', function($http, $timeout, $q) {
 
+    var isRunning = false;
+
     function pollError(response) {
       console.log('Poll Error', response);
     }
@@ -93,6 +95,9 @@ zaa
     }
     
     this.run = function() {
+      if (isRunning) return;
+
+      isRunning = true;
       $http.get("/admin/api-posts-autopostqueuejob/worker-data").then(function(response) {
         if (! response.data.enabled) {
           return;
