@@ -4,7 +4,7 @@ namespace luya\posts\frontend\controllers;
 
 use Yii;
 use yii\data\ActiveDataProvider;
-use yii\helpers\Html;
+use luya\helpers\Html;
 use luya\admin\filters\LargeThumbnail;
 use luya\posts\models\Article;
 use luya\posts\models\Cat;
@@ -227,6 +227,10 @@ class DefaultController extends \luya\web\Controller
         
         if (!$model) {
             return $this->goHome();
+        }
+
+        if (empty($title)) {
+            return $this->redirect($model->getDetailUrl(), 301);
         }
 
         $this->view->title = $model->title;

@@ -3,8 +3,7 @@
 namespace luya\posts\models;
 
 use Yii;
-use yii\helpers\{Inflector,Json};
-use luya\helpers\Url;
+use luya\helpers\{Inflector,Json,Url};
 use luya\admin\helpers\I18n;
 use luya\admin\aws\TaggableActiveWindow;
 use luya\admin\ngrest\base\NgRestModel;
