@@ -229,10 +229,6 @@ class DefaultController extends \luya\web\Controller
             return $this->goHome();
         }
 
-        if (empty($title)) {
-            return $this->redirect($model->getDetailUrl(), 301);
-        }
-
         $this->view->title = $model->title;
 
         $this->view->registerMetaTag(['name' => 'og:type', 'content' => 'website'], self::META_OG_TYPE);
