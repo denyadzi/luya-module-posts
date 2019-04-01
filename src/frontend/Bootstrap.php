@@ -8,14 +8,14 @@ use luya\web\Application;
 class Bootstrap extends BaseObject implements BootstrapInterface
 {
     /** @var array */
-    public $redirectUrls;
+    public $moduleLangRedirects;
     /** @var int */
     public $redirectCode = 301;
 
     public function init()
     {
-        if ($this->redirectUrls && ! is_array($this->redirectUrls)) {
-            throw new InvalidConfigException('`redirectUrls` property must be an associative array');
+        if ($this->moduleLangRedirects && ! is_array($this->moduleLangRedirects)) {
+            throw new InvalidConfigException('`moduleLangRedirects` property must be an associative array');
         }
     }
     
@@ -30,8 +30,8 @@ class Bootstrap extends BaseObject implements BootstrapInterface
     public function handleBeforeRequest($event)
     {
         $request = $event->sender->request;
-        if ($this->redirectUrls) {
-            foreach ($this->redirectUrls as $shortLangCode => $replacement) {
+        if (! $request->isConsoleRequest && $this->moduleLangRedirects) {
+            foreach ($this->moduleLangRedirects as $shortLangCode => $replacement) {
                 $testPath = "$shortLangCode/posts";
                 if (0 === strpos($request->pathInfo, ltrim($testPath, '/'))) {
 
