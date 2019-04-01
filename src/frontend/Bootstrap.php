@@ -32,7 +32,7 @@ class Bootstrap extends BaseObject implements BootstrapInterface
         $request = $event->sender->request;
         if (! $request->isConsoleRequest && $this->moduleLangRedirects) {
             foreach ($this->moduleLangRedirects as $shortLangCode => $replacement) {
-                $testPath = "$shortLangCode/posts";
+                $testPath = "$shortLangCode/posts/";
                 if (0 === strpos($request->pathInfo, ltrim($testPath, '/'))) {
 
                     $redirectUrl = $request->hostInfo.'/'.str_replace("posts", $replacement, $request->pathInfo);
