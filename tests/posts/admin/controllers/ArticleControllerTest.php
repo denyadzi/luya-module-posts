@@ -38,7 +38,7 @@ class ArticleControllerTest extends \luya\testsuite\cases\NgRestTestCase
         $controller = clone $this->controller;
         $controller->disablePermissionCheck = false;
 
-        $this->controllerActionAccess('index');
+        $this->controllerCanAccess('index');
         $passed = $controller->beforeAction(new Action('index', $controller));
 
         $this->assertTrue($passed);

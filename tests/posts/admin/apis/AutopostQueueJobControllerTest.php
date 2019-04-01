@@ -135,6 +135,8 @@ class AutopostQueueJobControllerTest extends \luya\testsuite\cases\NgRestTestCas
 
     public function testActionPending()
     {
+        $this->apiCanList();
+        
         $pendingJobs = $this->api->actionPending();
 
         $this->assertEquals(2, $pendingJobs->count);
