@@ -2,7 +2,7 @@
 
 namespace luya\posts\frontend;
 
-use yii\base\{BaseObject,BootstrapInterface};
+use yii\base\{BaseObject,BootstrapInterface,InvalidConfigException};
 use luya\web\Application;
 
 class Bootstrap extends BaseObject implements BootstrapInterface
