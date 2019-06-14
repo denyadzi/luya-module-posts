@@ -25,7 +25,7 @@
   },
   "require": {
     "bower-asset/angular-ui-tinymce" : "~0.0.18",
-    "luyadev/luya-module-admin" : "dev-master#54c652778fb121b5080d8a3ca6effa646160fc59",
+    "luyadev/luya-module-admin" : "^2.0",
     "ext-curl": "*"
   },
   "require-dev" : {
